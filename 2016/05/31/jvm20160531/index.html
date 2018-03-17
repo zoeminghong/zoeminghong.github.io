@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.6" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.6">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.6">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.6">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.6" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.0.6',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="当程序使用某个类时，如果该类还没被初始化，加载到内存中，则系统会通过加载、连接、初始化三个过程来对该类进行初始化。该过程就被称为类的初始化">
+<meta name="keywords" content="code">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA类加载机制全解析">
+<meta property="og:url" content="http://zoeminghong.github.io/2016/05/31/jvm20160531/index.html">
+<meta property="og:site_name" content="AppZone">
+<meta property="og:description" content="当程序使用某个类时，如果该类还没被初始化，加载到内存中，则系统会通过加载、连接、初始化三个过程来对该类进行初始化。该过程就被称为类的初始化">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.blog.csdn.net/20160531161623426">
+<meta property="og:updated_time" content="2017-06-20T10:58:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JAVA类加载机制全解析">
+<meta name="twitter:description" content="当程序使用某个类时，如果该类还没被初始化，加载到内存中，则系统会通过加载、连接、初始化三个过程来对该类进行初始化。该过程就被称为类的初始化">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160531161623426">
+
+
+
+
+
+
+  <link rel="canonical" href="http://zoeminghong.github.io/2016/05/31/jvm20160531/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>JAVA类加载机制全解析 | AppZone</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">AppZone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">分享快乐，感受科技的温度</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-spring-boot">
+    <a href="/tags/spring-boot" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />spring-boot</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-spring-cloud">
+    <a href="/tags/spring-cloud" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />spring-cloud</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-code">
+    <a href="/tags/code" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />code</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />Archives</a>
+</li>
+
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />Search</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/05/31/jvm20160531/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="迹_Jason">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JAVA类加载机制全解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-31T00:00:00+08:00">2016-05-31</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>当程序使用某个类时，如果该类还没被初始化，加载到内存中，则系统会通过<strong>加载、连接、初始化</strong>三个过程来对该类进行初始化。该过程就被称为类的初始化<br><a id="more"></a></p>
+<h3 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h3><p>指将类的class文件读入内存，并为之创建一个java.lang.Class的对象</p>
+<h5 id="类文件来源"><a href="#类文件来源" class="headerlink" title="类文件来源"></a>类文件来源</h5><ul>
+<li>从本地文件系统加载的class文件</li>
+<li>从JAR包加载class文件</li>
+<li>从网络加载class文件</li>
+<li>把一个Java源文件动态编译，并执行加载</li>
+</ul>
+<blockquote>
+<p>类加载器通常无须等到“首次使用”该类时才加载该类，JVM允许系统预先加载某些类</p>
+</blockquote>
+<h4 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h4><p>类加载器就是负责加载所有的类，将其载入内存中，生成一个java.lang.Class实例。一旦一个类被加载到JVM中之后，就不会再次载入了。</p>
+<p> <img src="http://img.blog.csdn.net/20160531161623426" alt="这里写图片描述"></p>
+<ul>
+<li>根类加载器（Bootstrap ClassLoader）：其负责加载Java的核心类，比如String、System这些类</li>
+<li>拓展类加载器（Extension ClassLoader）：其负责加载JRE的拓展类库</li>
+<li>系统类加载器（System ClassLoader）：其负责加载CLASSPATH环境变量所指定的JAR包和类路径</li>
+<li>用户类加载器：用户自定义的加载器，以类加载器为父类</li>
+</ul>
+<blockquote>
+<p>类加载器之间的父子关系并不是继承关系，是类加载器实例之间的关系</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">	ClassLoader systemLoader = ClassLoader.getSystemClassLoader();</span><br><span class="line">	System.out.println(<span class="string">"系统类加载"</span>);</span><br><span class="line">	Enumeration&lt;URL&gt; em1 = systemLoader.getResources(<span class="string">""</span>);</span><br><span class="line">	<span class="keyword">while</span> (em1.hasMoreElements()) &#123;</span><br><span class="line">		System.out.println(em1.nextElement());</span><br><span class="line">	&#125;</span><br><span class="line">	ClassLoader extensionLader = systemLoader.getParent();</span><br><span class="line">	System.out.println(<span class="string">"拓展类加载器"</span> + extensionLader);</span><br><span class="line">	System.out.println(<span class="string">"拓展类加载器的父"</span> + extensionLader.getParent());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>结果</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">系统类加载</span><br><span class="line">file:/E:/gaode/em/bin/</span><br><span class="line">拓展类加载器sun.misc.Launcher$ExtClassLoader@6d06d69c</span><br><span class="line">拓展类加载器的父null</span><br></pre></td></tr></table></figure>
+<p><strong>为什么根类加载器为NULL?</strong></p>
+<blockquote>
+<p>根类加载器并不是Java实现的，而且由于程序通常须访问根加载器，因此访问扩展类加载器的父类加载器时返回NULL</p>
+</blockquote>
+<h4 id="JVM类加载机制"><a href="#JVM类加载机制" class="headerlink" title="JVM类加载机制"></a>JVM类加载机制</h4><ul>
+<li>全盘负责，当一个类加载器负责加载某个Class时，该Class所依赖的和引用的其他Class也将由该类加载器负责载入，除非显示使用另外一个类加载器来载入</li>
+<li>父类委托，先让父类加载器试图加载该类，只有在父类加载器无法加载该类时才尝试从自己的类路径中加载该类</li>
+<li>缓存机制，缓存机制将会保证所有加载过的Class都会被缓存，当程序中需要使用某个Class时，类加载器先从缓存区寻找该Class，只有缓存区不存在，系统才会读取该类对应的二进制数据，并将其转换成Class对象，存入缓存区。这就是为什么修改了Class后，必须重启JVM，程序的修改才会生效</li>
+</ul>
+<h4 id="URLClassLoader类"><a href="#URLClassLoader类" class="headerlink" title="URLClassLoader类"></a>URLClassLoader类</h4><p>URLClassLoader为ClassLoader的一个实现类，该类也是系统类加载器和拓展类加载器的父类（继承关系）。它既可以从本地文件系统获取二进制文件来加载类，也可以远程主机获取二进制文件来加载类。</p>
+<p>两个构造器</p>
+<p>URLClassLoader(URL[] urls):使用默认的父类加载器创建一个ClassLoader对象，该对象将从urls所指定的路径来查询并加载类</p>
+<p>URLClassLoader(URL[] urls,ClassLoader parent):使用指定的父类加载器创建一个ClassLoader对象，其他功能与前一个构造器相同</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.net.MalformedURLException;</span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"><span class="keyword">import</span> java.net.URLClassLoader;</span><br><span class="line"><span class="keyword">import</span> java.sql.Connection;</span><br><span class="line"><span class="keyword">import</span> java.sql.SQLException;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.mysql.jdbc.Driver;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetMysql</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Connection conn;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Connection <span class="title">getConn</span><span class="params">(String url,String user,String pass)</span> <span class="keyword">throws</span> MalformedURLException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(conn==<span class="keyword">null</span>)&#123;</span><br><span class="line">			URL[]urls=&#123;<span class="keyword">new</span> URL(<span class="string">"file:mysql-connector-java-5.1.18.jar"</span>)&#125;;</span><br><span class="line">			URLClassLoader myClassLoader=<span class="keyword">new</span> URLClassLoader(urls);</span><br><span class="line">			Driver driver=(Driver) myClassLoader.loadClass(<span class="string">"com.mysql.jdbc.Driver"</span>).newInstance();</span><br><span class="line">			Properties pros=<span class="keyword">new</span> Properties();</span><br><span class="line">			pros.setProperty(<span class="string">"user"</span>, user);</span><br><span class="line">			pros.setProperty(<span class="string">"password"</span>, pass);</span><br><span class="line">			conn=driver.connect(url, pros);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> conn;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> method1 <span class="title">getConn</span><span class="params">()</span> <span class="keyword">throws</span> MalformedURLException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException</span>&#123;</span><br><span class="line">		</span><br><span class="line">			URL[]urls=&#123;<span class="keyword">new</span> URL(<span class="string">"file:com.em"</span>)&#125;;</span><br><span class="line">			URLClassLoader myClassLoader=<span class="keyword">new</span> URLClassLoader(urls);</span><br><span class="line">			method1 driver=(method1) myClassLoader.loadClass(<span class="string">"com.em.method1"</span>).newInstance();</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> driver;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> MalformedURLException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException </span>&#123;</span><br><span class="line">		System.out.println(getConn(<span class="string">"jdbc:mysql://10.10.16.11:3306/auto?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true"</span>, <span class="string">"jiji"</span>, <span class="string">"jiji"</span>));</span><br><span class="line">		System.out.println(getConn());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>获得URLClassLoader对象后，调用<strong>loanClass()</strong>方法来加载指定的类</p>
+<h4 id="自定义类加载器"><a href="#自定义类加载器" class="headerlink" title="自定义类加载器"></a>自定义类加载器</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CompileClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 读取一个文件的内容</span></span><br><span class="line"></span><br><span class="line">	<span class="meta">@SuppressWarnings</span>(<span class="string">"resource"</span>)</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">byte</span>[] getBytes(String filename) <span class="keyword">throws</span> IOException</span><br><span class="line"></span><br><span class="line">	&#123;</span><br><span class="line"></span><br><span class="line">		File file = <span class="keyword">new</span> File(filename);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">long</span> len = file.length();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">byte</span>[] raw = <span class="keyword">new</span> <span class="keyword">byte</span>[(<span class="keyword">int</span>) len];</span><br><span class="line"></span><br><span class="line">		FileInputStream fin = <span class="keyword">new</span> FileInputStream(file);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 一次读取class文件的全部二进制数据</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">int</span> r = fin.read(raw);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (r != len)</span><br><span class="line"></span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"无法读取全部文件"</span> + r + <span class="string">"!="</span> + len);</span><br><span class="line"></span><br><span class="line">		fin.close();</span><br><span class="line">		<span class="keyword">return</span> raw;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 定义编译指定java文件的方法</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">compile</span><span class="params">(String javaFile)</span> <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line"></span><br><span class="line">		System.out.println(<span class="string">"CompileClassLoader:正在编译"</span> + javaFile + <span class="string">"…….."</span>);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 调用系统的javac命令</span></span><br><span class="line"></span><br><span class="line">		Process p = Runtime.getRuntime().exec(<span class="string">"javac"</span> + javaFile);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 其它线程都等待这个线程完成</span></span><br><span class="line"></span><br><span class="line">			p.waitFor();</span><br><span class="line"></span><br><span class="line">		&#125; <span class="keyword">catch</span> (InterruptedException ie)</span><br><span class="line"></span><br><span class="line">		&#123;</span><br><span class="line"></span><br><span class="line">			System.out.println(ie);</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 获取javac 的线程的退出值</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">int</span> ret = p.exitValue();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 返回编译是否成功</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> ret == <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 重写Classloader的findCLass方法</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line"></span><br><span class="line">	&#123;</span><br><span class="line"></span><br><span class="line">		Class clazz = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 将包路径中的.替换成斜线/</span></span><br><span class="line"></span><br><span class="line">		String fileStub = name.replace(<span class="string">"."</span>, <span class="string">"/"</span>);</span><br><span class="line"></span><br><span class="line">		String javaFilename = fileStub + <span class="string">".java"</span>;</span><br><span class="line"></span><br><span class="line">		String classFilename = fileStub + <span class="string">".class"</span>;</span><br><span class="line"></span><br><span class="line">		File javaFile = <span class="keyword">new</span> File(javaFilename);</span><br><span class="line"></span><br><span class="line">		File classFile = <span class="keyword">new</span> File(classFilename);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 当指定Java源文件存在，且class文件不存在，或者Java源文件的修改时间比class文件//修改时间晚时，重新编译</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (javaFile.exists() &amp;&amp; (!classFile.exists())</span><br><span class="line">				|| javaFile.lastModified() &gt; classFile.lastModified())</span><br><span class="line"></span><br><span class="line">		&#123;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">				<span class="comment">// 如果编译失败，或该Class文件不存在</span></span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (!compile(javaFilename) || !classFile.exists())</span><br><span class="line"></span><br><span class="line">				&#123;</span><br><span class="line"></span><br><span class="line">					<span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(<span class="string">"ClassNotFoundException:"</span></span><br><span class="line">							+ javaFilename);</span><br><span class="line"></span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">			&#125; <span class="keyword">catch</span> (IOException ex)</span><br><span class="line"></span><br><span class="line">			&#123;</span><br><span class="line"></span><br><span class="line">				ex.printStackTrace();</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 如果class文件存在，系统负责将该文件转化成class对象</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (classFile.exists())</span><br><span class="line"></span><br><span class="line">		&#123;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">				<span class="comment">// 将class文件的二进制数据读入数组</span></span><br><span class="line"></span><br><span class="line">				<span class="keyword">byte</span>[] raw = getBytes(classFilename);</span><br><span class="line"></span><br><span class="line">				<span class="comment">// 调用Classloader的defineClass方法将二进制数据转换成class对象</span></span><br><span class="line"></span><br><span class="line">				clazz = defineClass(name, raw, <span class="number">0</span>, raw.length);</span><br><span class="line"></span><br><span class="line">			&#125; <span class="keyword">catch</span> (IOException ie)</span><br><span class="line"></span><br><span class="line">			&#123;</span><br><span class="line"></span><br><span class="line">				ie.printStackTrace();</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 如果claszz为null,表明加载失败，则抛出异常</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (clazz == <span class="keyword">null</span>) &#123;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> clazz;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 定义一个主方法</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 如果运行该程序时没有参数，即没有目标类</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (args.length &lt; <span class="number">1</span>) &#123;</span><br><span class="line"></span><br><span class="line">			System.out.println(<span class="string">"缺少运行的目标类，请按如下格式运行java源文件："</span>);</span><br><span class="line"></span><br><span class="line">			System.out.println(<span class="string">"java CompileClassLoader ClassName"</span>);</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 第一个参数是需要运行的类</span></span><br><span class="line"></span><br><span class="line">		String progClass = args[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 剩下的参数将作为运行目标类时的参数，所以将这些参数复制到一个新数组中</span></span><br><span class="line"></span><br><span class="line">		String progargs[] = <span class="keyword">new</span> String[args.length - <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">		System.arraycopy(args, <span class="number">1</span>, progargs, <span class="number">0</span>, progargs.length);</span><br><span class="line"></span><br><span class="line">		CompileClassLoader cl = <span class="keyword">new</span> CompileClassLoader();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 加载需要运行的类</span></span><br><span class="line"></span><br><span class="line">		Class&lt;?&gt; clazz = cl.loadClass(progClass);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 获取需要运行的类的主方法</span></span><br><span class="line"></span><br><span class="line">		Method main = clazz.getMethod(<span class="string">"main"</span>, (<span class="keyword">new</span> String[<span class="number">0</span>]).getClass());</span><br><span class="line"></span><br><span class="line">		Object argsArray[] = &#123; progargs &#125;;</span><br><span class="line"></span><br><span class="line">		main.invoke(<span class="keyword">null</span>, argsArray);</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>JVM中除了根类加载器之外的所有类的加载器都是ClassLoader子类的实例，通过重写ClassLoader中的方法，实现自定义的类加载器</p>
+<p>loadClass(String name,boolean resolve):为ClassLoader的入口点，根据指定名称来加载类，系统就是调用ClassLoader的该方法来获取制定累对应的Class对象</p>
+<p>findClass(String name):根据指定名称来查找类</p>
+<blockquote>
+<p>推荐使用findClass方法</p>
+</blockquote>
+<h3 id="类的链接"><a href="#类的链接" class="headerlink" title="类的链接"></a>类的链接</h3><p>当类被加载后，系统会为之生成一个Class对象，接着将会进入连接阶段，链接阶段负责把类的二进制数据合并到JRE中</p>
+<p><strong>三个阶段</strong></p>
+<p>验证：检验被加载的类是否有正确的内部结构，并和其他类协调一致</p>
+<p>准备：负责为类的类变量分配内存。并设置默认初始值</p>
+<p>解析：将类的二进制数据中的符号引用替换成直接引用</p>
+<h3 id="类的初始化"><a href="#类的初始化" class="headerlink" title="类的初始化"></a>类的初始化</h3><p>JVM负责对类进行初始化，主要对类变量进行初始化</p>
+<p>在Java中对类变量进行初始值设定有两种方式：①声明类变量是指定初始值②使用静态代码块为类变量指定初始值</p>
+<p><strong>JVM初始化步骤</strong></p>
+<ol>
+<li>假如这个类还没有被加载和连接，则程序先加载并连接该类</li>
+<li>假如该类的直接父类还没有被初始化，则先初始化其直接父类</li>
+<li>假如类中有初始化语句，则系统依次执行这些初始化语句</li>
+</ol>
+<h3 id="类初始化时机"><a href="#类初始化时机" class="headerlink" title="类初始化时机"></a>类初始化时机</h3><ol>
+<li>创建类实例。也就是new的方式</li>
+<li>调用某个类的类方法</li>
+<li>访问某个类或接口的类变量，或为该类变量赋值</li>
+<li>使用反射方式强制创建某个类或接口对应的java.lang.Class对象</li>
+<li>初始化某个类的子类，则其父类也会被初始化</li>
+<li>直接使用java.exe命令来运行某个主类</li>
+</ol>
+<p><a href="http://blog.csdn.net/boyupeng/article/details/47951037" target="_blank" rel="noopener">类加载机制（类加载过程和类加载器）</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/weixin.jpg" alt="迹_Jason wechat" style="width: 200px; max-width: 100%;"/>
+    <div>分享快乐，感受科技的温度</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/pay.jpg" alt="迹_Jason WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/code/" rel="tag"># code</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/26/jvm20160526/" rel="next" title="对象与内存控制">
+                <i class="fa fa-chevron-left"></i> 对象与内存控制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/01/jvm20160601/" rel="prev" title="Java代理设计模式详解">
+                Java代理设计模式详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/1.jpg"
+                alt="迹_Jason" />
+            
+              <p class="site-author-name" itemprop="name">迹_Jason</p>
+              <p class="site-description motion-element" itemprop="description">分享快乐，感受科技的温度</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zoeminghong" target="_blank" title="github"><i class="fa fa-fw fa-globe"></i>github</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/jasongoo123/home?wvr=5" target="_blank" title="weibo"><i class="fa fa-fw fa-globe"></i>weibo</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载"><span class="nav-number">1.</span> <span class="nav-text">类加载</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#类文件来源"><span class="nav-number">1.0.1.</span> <span class="nav-text">类文件来源</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类加载器"><span class="nav-number">1.1.</span> <span class="nav-text">类加载器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JVM类加载机制"><span class="nav-number">1.2.</span> <span class="nav-text">JVM类加载机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#URLClassLoader类"><span class="nav-number">1.3.</span> <span class="nav-text">URLClassLoader类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自定义类加载器"><span class="nav-number">1.4.</span> <span class="nav-text">自定义类加载器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类的链接"><span class="nav-number">2.</span> <span class="nav-text">类的链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类的初始化"><span class="nav-number">3.</span> <span class="nav-text">类的初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类初始化时机"><span class="nav-number">4.</span> <span class="nav-text">类初始化时机</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">迹_Jason</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.0.6</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.6"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.6"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.6"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.6"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.6"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

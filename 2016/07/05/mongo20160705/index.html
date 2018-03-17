@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.6" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.6">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.6">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.6">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.6" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.0.6',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Spring-data对MongoDB进行了很好的支持，接下来就讲解一下关于Spring对MongoDB的配置和一些正常的使用 我下面的工程使用的是Spring的Java配置的方式和Maven构建 具体的工程代码大家可以访问我的Github地址:https://github.com/zoeminghong/springmvc-javaconfig">
+<meta name="keywords" content="code">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MongoDB的Spring配置使用">
+<meta property="og:url" content="http://zoeminghong.github.io/2016/07/05/mongo20160705/index.html">
+<meta property="og:site_name" content="AppZone">
+<meta property="og:description" content="Spring-data对MongoDB进行了很好的支持，接下来就讲解一下关于Spring对MongoDB的配置和一些正常的使用 我下面的工程使用的是Spring的Java配置的方式和Maven构建 具体的工程代码大家可以访问我的Github地址:https://github.com/zoeminghong/springmvc-javaconfig">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-06-20T10:58:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MongoDB的Spring配置使用">
+<meta name="twitter:description" content="Spring-data对MongoDB进行了很好的支持，接下来就讲解一下关于Spring对MongoDB的配置和一些正常的使用 我下面的工程使用的是Spring的Java配置的方式和Maven构建 具体的工程代码大家可以访问我的Github地址:https://github.com/zoeminghong/springmvc-javaconfig">
+
+
+
+
+
+
+  <link rel="canonical" href="http://zoeminghong.github.io/2016/07/05/mongo20160705/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>MongoDB的Spring配置使用 | AppZone</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">AppZone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">分享快乐，感受科技的温度</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-spring-boot">
+    <a href="/tags/spring-boot" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />spring-boot</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-spring-cloud">
+    <a href="/tags/spring-cloud" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />spring-cloud</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-code">
+    <a href="/tags/code" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />code</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />Archives</a>
+</li>
+
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />Search</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/07/05/mongo20160705/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="迹_Jason">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MongoDB的Spring配置使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-07-05T00:00:00+08:00">2016-07-05</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Spring-data对MongoDB进行了很好的支持，接下来就讲解一下关于Spring对MongoDB的配置和一些正常的使用</p>
+<p>我下面的工程使用的是Spring的Java配置的方式和Maven构建</p>
+<p>具体的工程代码大家可以访问我的Github地址:<a href="https://github.com/zoeminghong/springmvc-javaconfig" target="_blank" rel="noopener">https://github.com/zoeminghong/springmvc-javaconfig</a></p>
+<a id="more"></a>
+<h3 id="①MongoDB的必要配置"><a href="#①MongoDB的必要配置" class="headerlink" title="①MongoDB的必要配置"></a>①MongoDB的必要配置</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> springmvc.rootconfig;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.core.MongoClientFactoryBean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.core.MongoOperations;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.core.MongoTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.repository.config.EnableMongoRepositories;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.mongodb.Mongo;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="comment">// 启用MongoDB的Repository功能，会对其Repositories自动扫描</span></span><br><span class="line"><span class="meta">@EnableMongoRepositories</span>(basePackages = <span class="string">"springmvc.orders.db"</span>)	</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MongoConfig</span> </span>&#123;</span><br><span class="line">	<span class="comment">// MongoClient配置</span></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> MongoClientFactoryBean <span class="title">mongo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		MongoClientFactoryBean mongo = <span class="keyword">new</span> MongoClientFactoryBean();</span><br><span class="line">		mongo.setHost(<span class="string">"localhost"</span>);</span><br><span class="line">      <span class="comment">//MongoCredential credential=MongoCredential.createCredential(env.getProperty("mongo.username"), "OrdersDB",env.getProperty("mongo.password").toCharArray());</span></span><br><span class="line"><span class="comment">//		mongo.setCredentials(new MongoCredential[]&#123;credential&#125;);</span></span><br><span class="line">        <span class="comment">//还可以对端口进行配置</span></span><br><span class="line">		<span class="keyword">return</span> mongo;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Mongo Template配置</span></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> MongoOperations <span class="title">mongoTemplate</span><span class="params">(Mongo mongo)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//OrdersDB就是Mongo的数据库</span></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> MongoTemplate(mongo, <span class="string">"OrdersDB"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了访问数据库的时候，我们可能还需要帐号密码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MongoCredential credential=MongoCredential.createCredential(env.getProperty(<span class="string">"mongo.username"</span>), <span class="string">"OrdersDB"</span>,env.getProperty(<span class="string">"mongo.password"</span>).toCharArray());</span><br><span class="line">mongo.setCredentials(<span class="keyword">new</span> MongoCredential[]&#123;credential&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="②为模型添加注解"><a href="#②为模型添加注解" class="headerlink" title="②为模型添加注解"></a>②为模型添加注解</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> springmvc.bean;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Collection;</span><br><span class="line"><span class="keyword">import</span> java.util.LinkedHashSet;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.data.annotation.Id;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.core.mapping.Document;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.core.mapping.Field;</span><br><span class="line"><span class="comment">//这是文档</span></span><br><span class="line"><span class="meta">@Document</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Order</span> </span>&#123;</span><br><span class="line">  <span class="comment">//指定ID</span></span><br><span class="line">	<span class="meta">@Id</span></span><br><span class="line">	<span class="keyword">private</span> String id;</span><br><span class="line">    <span class="comment">//为域重命名</span></span><br><span class="line">	<span class="meta">@Field</span>(<span class="string">"client"</span>)</span><br><span class="line">	<span class="keyword">private</span> String customer;</span><br><span class="line">	<span class="keyword">private</span> String type;</span><br><span class="line">	 <span class="keyword">private</span> Collection&lt;Item&gt; items=<span class="keyword">new</span> LinkedHashSet&lt;Item&gt;();</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> id;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(String id)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.id = id;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getCustomer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> customer;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCustomer</span><span class="params">(String customer)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.customer = customer;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> type;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setType</span><span class="params">(String type)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.type = type;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Collection&lt;Item&gt; <span class="title">getItems</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> items;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setItems</span><span class="params">(Collection&lt;Item&gt; items)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.items = items;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> springmvc.bean;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Item</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Long id;</span><br><span class="line">	<span class="keyword">private</span> Order order;</span><br><span class="line">	<span class="keyword">private</span> String product;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">double</span> price;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> quantity;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Long <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> id;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Long id)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.id = id;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Order <span class="title">getOrder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> order;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOrder</span><span class="params">(Order order)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.order = order;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getProduct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> product;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setProduct</span><span class="params">(String product)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.product = product;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">getPrice</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> price;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPrice</span><span class="params">(<span class="keyword">double</span> price)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.price = price;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getQuantity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> quantity;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setQuantity</span><span class="params">(<span class="keyword">int</span> quantity)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.quantity = quantity;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>注解</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@Document</td>
+<td>标示映射到mongoDB文档上的领域对象</td>
+</tr>
+<tr>
+<td>@ID</td>
+<td>标示某个为ID域</td>
+</tr>
+<tr>
+<td>@DbRef</td>
+<td>标示某个域要引用其他的文档，这个文档有可能位于另外一个数据库中</td>
+</tr>
+<tr>
+<td>@Field</td>
+<td>为文档域指定自定义的元数据</td>
+</tr>
+<tr>
+<td>@Version</td>
+<td>标示某个属性用作版本域</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>若不使用@Field注解，域名就与Java属性相同</p>
+<p>上面之所以Item的Java类为什么没有@Document注解，是因为我们不会单独想Item持久化为文档</p>
+</blockquote>
+<h3 id="③使用MongoTemplate访问MongoDB"><a href="#③使用MongoTemplate访问MongoDB" class="headerlink" title="③使用MongoTemplate访问MongoDB"></a>③使用MongoTemplate访问MongoDB</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> springmvc.web;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.core.MongoOperations;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMethod;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> springmvc.bean.Order;</span><br><span class="line"><span class="keyword">import</span> springmvc.orders.db.OrderRepository;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HomeController</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Autowired</span></span><br><span class="line">	MongoOperations mongo;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping</span>(value = &#123; <span class="string">"/"</span>, <span class="string">"index"</span> &#125;, method = RequestMethod.GET)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		 <span class="keyword">long</span> orderCount=mongo.getCollection(<span class="string">"order"</span>).count();</span><br><span class="line">		 System.out.println(orderCount);</span><br><span class="line"><span class="comment">//		Order order = new Order();</span></span><br><span class="line"><span class="comment">//		order.setId("1");</span></span><br><span class="line"><span class="comment">//		order.setCustomer("gg");</span></span><br><span class="line"><span class="comment">//		order.setType("2");</span></span><br><span class="line">      <span class="comment">//第二个参数是文档存储的名称</span></span><br><span class="line"><span class="comment">//		mongo.save(order,"order");</span></span><br><span class="line"><span class="comment">//		String orderId="1";</span></span><br><span class="line"><span class="comment">//		Order order=mongo.findById(orderId, Order.class);</span></span><br><span class="line"><span class="comment">//		System.out.println(order.getCustomer());</span></span><br><span class="line">		<span class="keyword">return</span> <span class="string">"index"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在这里我们将MongoTemplate注入到一个类型为MongoOperations的属性中。MongoOperations是MongoTemplate所实现的接口，MongoOperations中存在很多文档操作方法</p>
+<p>MongoOperations其实已经能满足很多需求了</p>
+</blockquote>
+<p><strong>如果还没有满足你的需求，接下来我就介绍一下，如何编写MongoDB Repository</strong></p>
+<h3 id="编写MongoDB-Repository"><a href="#编写MongoDB-Repository" class="headerlink" title="编写MongoDB Repository"></a>编写MongoDB Repository</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> springmvc.orders.db;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.repository.MongoRepository;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> springmvc.bean.Order;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OrderRepository</span> <span class="keyword">extends</span> <span class="title">MongoRepository</span>&lt;<span class="title">Order</span>, <span class="title">String</span>&gt; </span>&#123;</span><br><span class="line">	<span class="function">List&lt;Order&gt; <span class="title">findByCustomer</span><span class="params">(String c)</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function">List&lt;Order&gt; <span class="title">findByCustomerLike</span><span class="params">(String c)</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function">List&lt;Order&gt; <span class="title">findByCustomerAndType</span><span class="params">(String c, String t)</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function">List&lt;Order&gt; <span class="title">findByCustomerLikeAndType</span><span class="params">(String c, String t)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>看到这里，大家有没有发现package的地址就是我们刚才@EnableMongoRepositories(basePackages = “springmvc.orders.db”)的配置</p>
+<p>MongoRepository接口有两个参数，第一个是带有@Document注解的对象类型，也就是该Repository要处理的类型。第二个参数是带有@Id注解的属性类型</p>
+</blockquote>
+<p>OrderRepository继承了MongoRepository中很多自带的方法</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>long count()</td>
+<td>返回指定Repository类型的文档数量</td>
+</tr>
+<tr>
+<td>void delete(Iterable&lt;? extends T&gt;)</td>
+<td>删除与指定对象关联的所有文档</td>
+</tr>
+<tr>
+<td>void delete(T)</td>
+<td>删除与指定对象关联的文档</td>
+</tr>
+<tr>
+<td>void delete(ID)</td>
+<td>根据ID删除某一个文档</td>
+</tr>
+<tr>
+<td>void deleteAll();</td>
+<td>删除指定Repository类型的所有文档</td>
+</tr>
+<tr>
+<td>boolean exists(Object)</td>
+<td>如果存在与指定对象相关联的文档，则返回true</td>
+</tr>
+<tr>
+<td>boolean exists(ID)</td>
+<td>如果存在与指定对象相关联的文档，则返回true</td>
+</tr>
+<tr>
+<td>List<t>findAll()</t></td>
+<td>返回指定Repository类型的所有文档</td>
+</tr>
+<tr>
+<td>List<t>findAll(Iterable<id>)</id></t></td>
+<td>返回指定文档ID对应的所有文档</td>
+</tr>
+<tr>
+<td>List<t>findAll(Pageable)</t></td>
+<td>为指定Repository类型，返回分页且排序的文档列表</td>
+</tr>
+<tr>
+<td>List<t>findAll(Sort)</t></td>
+<td>为指定Repository类型，返回排序后的所有文档列表</td>
+</tr>
+<tr>
+<td>T findOne(ID)</td>
+<td>为指定的ID返回单个文档</td>
+</tr>
+<tr>
+<td>Save(terable<s>)</s></td>
+<td>保存指定Iterable中的所有文档</td>
+</tr>
+<tr>
+<td>save(<s>)</s></td>
+<td>为给定的对象保存一条文档</td>
+</tr>
+</tbody>
+</table>
+<p>上面的我们定义的四个方法都是我们自定义的方法，其方法名存在很多意义，不能随便定义</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">List&lt;Order&gt; <span class="title">findByCustomer</span><span class="params">(String c)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>find为查询动词，还可以是read、get、count等</p>
+<p>Customer为断言，判断其行为</p>
+<p>在断言中，会有一个或多个限制结果的条件。每个条件必须引用一个属性，并且还可以指定一种比较操作。如果省略比较操作符的话，那么这暗指是一种相等比较操作。不过，我们也可以选择其他的比较操作</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IsAfter、After、IsGreaterThan、GreaterThan</td>
+</tr>
+<tr>
+<td>IsGreaterThanEqual、GreaterThanEqual</td>
+</tr>
+<tr>
+<td>IsBefore、Before、IsLessThan、LessThan</td>
+</tr>
+<tr>
+<td>IsLessThanEqual、LessThanEqual</td>
+</tr>
+<tr>
+<td>IsBetween、Between</td>
+</tr>
+<tr>
+<td>IsNull、Null</td>
+</tr>
+<tr>
+<td>IsNotNull、NotNull</td>
+</tr>
+<tr>
+<td>IsIn、In</td>
+</tr>
+<tr>
+<td>IsNotIn、NotIn</td>
+</tr>
+<tr>
+<td>IsStartingWith、StartingWith、StartsWith</td>
+</tr>
+<tr>
+<td>IsEndingWith、EndingWith、EndsWith</td>
+</tr>
+<tr>
+<td>IsContaining、Containing、Contains</td>
+</tr>
+<tr>
+<td>IsLike、Like</td>
+</tr>
+<tr>
+<td>IsNotLike、NotLike</td>
+</tr>
+<tr>
+<td>IsTure、True</td>
+</tr>
+<tr>
+<td>IsFalse、False</td>
+</tr>
+<tr>
+<td>Is、Equals</td>
+</tr>
+<tr>
+<td>IsNot、Not</td>
+</tr>
+</tbody>
+</table>
+<p>other</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IgnoringCase、IgnoresCase、OrderBy、And、Or</td>
+</tr>
+</tbody>
+</table>
+<h4 id="指定查询"><a href="#指定查询" class="headerlink" title="指定查询"></a>指定查询</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Query</span>(<span class="string">"&#123;'customer':'Chuck Wagon','type':?0&#125;"</span>)</span><br><span class="line"><span class="function">List&lt;Order&gt; <span class="title">findChucksOrders</span><span class="params">(String t)</span></span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>@Query中给定的JSON将会与所有的Order文档进行匹配，并返回匹配的文档，这里的type属性映射成“？0”，这表明type属性应该与查询方法的第0个参数相等，如果有多个参数，则”?1”…..</p>
+</blockquote>
+<h4 id="混合自定义的功能"><a href="#混合自定义的功能" class="headerlink" title="混合自定义的功能"></a>混合自定义的功能</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> springmvc.orders.db;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> springmvc.bean.Order;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OrderOperations</span> </span>&#123;</span><br><span class="line">	<span class="function">List&lt;Order&gt; <span class="title">findOrdersByType</span><span class="params">(String t)</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> springmvc.orders.db;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.core.MongoOperations;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.core.query.Criteria;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.core.query.Query;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> springmvc.bean.Order;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderRepositoryImpl</span> <span class="keyword">implements</span> <span class="title">OrderOperations</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Autowired</span></span><br><span class="line">	<span class="keyword">private</span> MongoOperations mongo;</span><br><span class="line">	<span class="comment">//将混合实现注入MongoOperations</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;Order&gt; <span class="title">findOrdersByType</span><span class="params">(String t)</span> </span>&#123;</span><br><span class="line">		String type =t.equals(<span class="string">"Net"</span>)?<span class="string">"2"</span>:t;</span><br><span class="line">		Criteria where=Criteria.where(<span class="string">"type"</span>).is(type);</span><br><span class="line">		Query query=Query.query(where);</span><br><span class="line">		<span class="keyword">return</span> mongo.find(query, Order.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> springmvc.orders.db;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.repository.MongoRepository;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.repository.Query;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> springmvc.bean.Order;</span><br><span class="line"><span class="comment">//继承OrderOperations接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OrderRepository</span> <span class="keyword">extends</span> <span class="title">MongoRepository</span>&lt;<span class="title">Order</span>, <span class="title">String</span>&gt;,<span class="title">OrderOperations</span> </span>&#123;</span><br><span class="line">	<span class="function">List&lt;Order&gt; <span class="title">findByCustomer</span><span class="params">(String c)</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function">List&lt;Order&gt; <span class="title">findByCustomerLike</span><span class="params">(String c)</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function">List&lt;Order&gt; <span class="title">findByCustomerAndType</span><span class="params">(String c, String t)</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function">List&lt;Order&gt; <span class="title">findByCustomerLikeAndType</span><span class="params">(String c, String t)</span></span>;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Query</span>(<span class="string">"&#123;'customer':'Chuck Wagon','type':?0&#125;"</span>)</span><br><span class="line">	<span class="function">List&lt;Order&gt; <span class="title">findChucksOrders</span><span class="params">(String t)</span></span>;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> springmvc.web;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.mongodb.core.MongoOperations;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMethod;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> springmvc.bean.Order;</span><br><span class="line"><span class="keyword">import</span> springmvc.orders.db.OrderRepository;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HomeController</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Autowired</span></span><br><span class="line">	MongoOperations mongo;</span><br><span class="line">	<span class="meta">@Autowired</span></span><br><span class="line">	OrderRepository orderRepository;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping</span>(value = &#123; <span class="string">"/"</span>, <span class="string">"index"</span> &#125;, method = RequestMethod.GET)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		List&lt;Order&gt; list=orderRepository.findOrdersByType(<span class="string">"2"</span>);</span><br><span class="line">		System.out.println(list.size());</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"index"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>以上这些关联起来的关键点是OrderRepositoryImpl，这个名字前半部分与OrderRepository相同，只是添加了一个“Impl”后缀。如果想更改该后缀，可以在MongoConfig类中更改为自己理想的后缀</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableMongoRepositories</span>(basePackages = <span class="string">"springmvc.orders.db"</span>,repositoryImplementationPostfix=<span class="string">"Stuff"</span>)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/weixin.jpg" alt="迹_Jason wechat" style="width: 200px; max-width: 100%;"/>
+    <div>分享快乐，感受科技的温度</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/pay.jpg" alt="迹_Jason WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/code/" rel="tag"># code</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/12/nio20160612/" rel="next" title="NIO全解析说明">
+                <i class="fa fa-chevron-left"></i> NIO全解析说明
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/07/redis20160707/" rel="prev" title="Spring的Redis配置与使用">
+                Spring的Redis配置与使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/1.jpg"
+                alt="迹_Jason" />
+            
+              <p class="site-author-name" itemprop="name">迹_Jason</p>
+              <p class="site-description motion-element" itemprop="description">分享快乐，感受科技的温度</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zoeminghong" target="_blank" title="github"><i class="fa fa-fw fa-globe"></i>github</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/jasongoo123/home?wvr=5" target="_blank" title="weibo"><i class="fa fa-fw fa-globe"></i>weibo</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#①MongoDB的必要配置"><span class="nav-number">1.</span> <span class="nav-text">①MongoDB的必要配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#②为模型添加注解"><span class="nav-number">2.</span> <span class="nav-text">②为模型添加注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#③使用MongoTemplate访问MongoDB"><span class="nav-number">3.</span> <span class="nav-text">③使用MongoTemplate访问MongoDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写MongoDB-Repository"><span class="nav-number">4.</span> <span class="nav-text">编写MongoDB Repository</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#指定查询"><span class="nav-number">4.1.</span> <span class="nav-text">指定查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#混合自定义的功能"><span class="nav-number">4.2.</span> <span class="nav-text">混合自定义的功能</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">迹_Jason</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.0.6</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.6"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.6"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.6"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.6"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.6"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

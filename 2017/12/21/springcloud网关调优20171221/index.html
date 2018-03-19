@@ -567,8 +567,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/14/bookmark/" rel="next" title="Bookmark">
-                <i class="fa fa-chevron-left"></i> Bookmark
+              <a href="/2017/12/21/books/" rel="next" title="推荐书籍">
+                <i class="fa fa-chevron-left"></i> 推荐书籍
               </a>
             
           </div>
@@ -576,10 +576,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/21/books/" rel="prev" title="推荐书籍">
-                推荐书籍 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -923,14 +919,14 @@
         var gitment = new Gitmint({
             id: window.location.pathname,
             owner: 'zoeminghong',
-            repo: 'git@github.com:zoeminghong/zoeminghong.github.io.git',
+            repo: 'zoeminghong.github.io',
             
             lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
             
             oauth: {
             
             
-                client_secret: 'e95ab8387322deba5598f7d4ac2f56531e32491c',
+                proxy_gateway: 'http://zoeminghong.github.io',
             
                 client_id: '28e75865a9f3927a9914'
             }});

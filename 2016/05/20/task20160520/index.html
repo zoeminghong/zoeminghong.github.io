@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-CN">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -77,7 +77,7 @@
     root: '/',
     scheme: 'Mist',
     version: '6.0.6',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: false,
     fastclick: false,
     lazyload: false,
@@ -106,7 +106,7 @@
 <meta property="og:url" content="http://zoeminghong.github.io/2016/05/20/task20160520/index.html">
 <meta property="og:site_name" content="AppZone">
 <meta property="og:description" content="在java中一个完整定时任务需要由Timer、TimerTask两个类来配合完成。 API中是这样定义他们的，Timer：一种工具，线程用其安排以后在后台线程中执行的任务。可安排任务执行一次，或者定期重复执行。由TimerTask：Timer 安排为一次执行或重复执行的任务。我们可以这样理解Timer是一种定时器工具，用来在一个后台线程计划执行指定任务，而TimerTask一个抽象类，它的子类代表">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2017-06-20T10:58:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java定时任务">
@@ -167,7 +167,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
 
   
   
@@ -192,12 +192,12 @@
       </a>
     </div>
       
-        <p class="site-subtitle">分享快乐，感受科技的温度</p>
+        <h1 class="site-subtitle" itemprop="description">分享快乐，感受科技的温度</h1>
       
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -216,7 +216,7 @@
           
   <li class="menu-item menu-item-home">
     <a href="/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+      首页</a>
 </li>
 
       
@@ -225,7 +225,7 @@
           
   <li class="menu-item menu-item-spring-boot">
     <a href="/tags/spring-boot" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />spring-boot</a>
+      SpringBoot</a>
 </li>
 
       
@@ -234,7 +234,7 @@
           
   <li class="menu-item menu-item-spring-cloud">
     <a href="/tags/spring-cloud" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />spring-cloud</a>
+      SpringCloud</a>
 </li>
 
       
@@ -243,7 +243,7 @@
           
   <li class="menu-item menu-item-code">
     <a href="/tags/code" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />code</a>
+      Sharing</a>
 </li>
 
       
@@ -252,7 +252,7 @@
           
   <li class="menu-item menu-item-archives">
     <a href="/archives" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />Archives</a>
+      归档</a>
 </li>
 
       
@@ -262,8 +262,7 @@
           
             <a href="javascript:;" class="popup-trigger">
           
-            
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />Search</a>
+            搜索</a>
         </li>
       
     </ul>
@@ -287,7 +286,7 @@
     </span>
     <div class="local-search-input-wrapper">
       <input autocomplete="off"
-             placeholder="Searching..." spellcheck="false"
+             placeholder="搜索..." spellcheck="false"
              type="text" id="local-search-input">
     </div>
   </div>
@@ -351,7 +350,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java定时任务</h1>
+          <h2 class="post-title" itemprop="name headline">Java定时任务</h2>
         
 
         <div class="post-meta">
@@ -361,9 +360,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-20T00:00:00+08:00">2016-05-20</time>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-20T00:00:00+08:00">2016-05-20</time>
             
 
             
@@ -375,6 +374,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/05/20/task20160520/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/05/20/task20160520/" itemprop="commentsCount"></span>
+                </a>
+              </span>
             
           
 
@@ -493,14 +502,14 @@
         <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
   <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
   <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-    <span>Donate</span>
+    <span>打赏</span>
   </button>
   <div id="QR" style="display: none;">
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/images/pay.jpg" alt="迹_Jason WeChat Pay"/>
-        <p>WeChat Pay</p>
+        <img id="wechat_qr" src="/images/pay.jpg" alt="迹_Jason 微信支付"/>
+        <p>微信支付</p>
       </div>
     
 
@@ -533,8 +542,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/05/20/sendmessage20160520/" rel="next" title="消息推送原理">
-                <i class="fa fa-chevron-left"></i> 消息推送原理
+              <a href="/2016/05/19/activemq20160519/" rel="next" title="ActiveMQ+Spring工程创建详解（附工程文件）">
+                <i class="fa fa-chevron-left"></i> ActiveMQ+Spring工程创建详解（附工程文件）
               </a>
             
           </div>
@@ -543,8 +552,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/05/25/generic20160525/" rel="prev" title="Java泛型全解析">
-                Java泛型全解析 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/05/20/sendmessage20160520/" rel="prev" title="消息推送原理">
+                消息推送原理 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -572,6 +581,13 @@
           
 
   
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
 
 
 
@@ -596,10 +612,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
+            文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
+            站点概览
           </li>
         </ul>
       
@@ -624,7 +640,7 @@
                   <a href="/archives">
                 
                     <span class="site-state-item-count">37</span>
-                    <span class="site-state-item-name">posts</span>
+                    <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
               
@@ -647,7 +663,7 @@
                       
                     
                     <span class="site-state-item-count">4</span>
-                    <span class="site-state-item-name">tags</span>
+                    <span class="site-state-item-name">标签</span>
                   
                 </div>
               
@@ -660,12 +676,12 @@
             <div class="links-of-author motion-element">
               
                 <span class="links-of-author-item">
-                  <a href="https://github.com/zoeminghong" target="_blank" title="github"><i class="fa fa-fw fa-globe"></i>github</a>
+                  <a href="https://github.com/zoeminghong" target="_blank" title="github" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>github</a>
                   
                 </span>
               
                 <span class="links-of-author-item">
-                  <a href="http://weibo.com/jasongoo123/home?wvr=5" target="_blank" title="weibo"><i class="fa fa-fw fa-globe"></i>weibo</a>
+                  <a href="http://weibo.com/jasongoo123/home?wvr=5" target="_blank" title="weibo" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>weibo</a>
                   
                 </span>
               
@@ -728,9 +744,11 @@
 </div>
 
 
+  
 
 
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" rel="external nofollow" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
 
@@ -738,7 +756,7 @@
 
 
 
-  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.0.6</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.0.6</div>
 
 
 
@@ -862,6 +880,43 @@
 
 
 
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname,
+            owner: 'zoeminghong',
+            repo: 'git@github.com:zoeminghong/zoeminghong.github.io.git',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'e95ab8387322deba5598f7d4ac2f56531e32491c',
+            
+                client_id: '28e75865a9f3927a9914'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
 
 
 

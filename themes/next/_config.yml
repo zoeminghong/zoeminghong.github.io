@@ -91,7 +91,7 @@ footer:
 canonical: true
 
 # Change headers hierarchy on site-subtitle (will be main site description) and on all post/pages titles for better SEO-optimization.
-seo: false
+seo: true
 
 # If true, will add site-subtitle to index page, added in main hexo config.
 # subtitle: Subtitle
@@ -109,7 +109,7 @@ index_with_subtitle: false
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, question icon will be loaded.
 menu:
   home: / || home
-  #categories: /categories
+  # categories: /categories
   #about: /about
   spring-boot: /tags/spring-boot
   spring-cloud: /tags/spring-cloud
@@ -120,20 +120,20 @@ menu:
 
 menu_icons:
   enable: true
-  #KeyMapsToMenuItemKey: NameOfTheIconFromFontAwesome
+  # KeyMapsToMenuItemKey: NameOfTheIconFromFontAwesome
   home: home
-  about: user
-  categories: th
-  tags: tags
-  archives: archive
-  commonweal: heartbeat
+  # about: user
+  # categories: th
+  # tags: tags
+  # commonweal: heartbeat
   # it: laptop
-  code: terminal
   spring-cloud: magnet
   spring-boot: fire
+  code: terminal
+  archives: archive
 # Enable/Disable menu icons / item badges.
 menu_settings:
-  icons: true
+  icons: false
   badges: false
 
 # ---------------------------------------------------------------
@@ -230,7 +230,7 @@ sidebar:
   #  - always  expand for all pages automatically
   #  - hide    expand only when click on the sidebar toggle icon.
   #  - remove  Totally remove sidebar including sidebar toggle.
-  display: post
+  display: hide
   #display: always
   #display: hide
   #display: remove
@@ -507,16 +507,16 @@ valine:
 # Gitment
 # Introduction: https://imsun.net/posts/gitment-introduction/
 gitment:
-  enable: false
+  enable: true
   mint: true # RECOMMEND, A mint on Gitment, to support count, language and proxy_gateway
   count: true # Show comments count in post meta area
   lazy: false # Comments lazy loading with a button
   cleanly: false # Hide 'Powered by ...' on footer, and more
   language: # Force language, or auto switch by theme
-  github_user: # MUST HAVE, Your Github Username
-  github_repo: # MUST HAVE, The name of the repo you use to store Gitment comments
-  client_id: # MUST HAVE, Github client id for the Gitment
-  client_secret: # EITHER this or proxy_gateway, Github access secret token for the Gitment
+  github_user: zoeminghong # MUST HAVE, Your Github Username
+  github_repo: zoeminghong.github.io # MUST HAVE, The name of the repo you use to store Gitment comments
+  client_id: 28e75865a9f3927a9914 # MUST HAVE, Github client id for the Gitment
+  client_secret: e95ab8387322deba5598f7d4ac2f56531e32491c # EITHER this or proxy_gateway, Github access secret token for the Gitment
   proxy_gateway: # Address of api proxy, See: https://github.com/aimingoo/intersect
   redirect_protocol: # Protocol of redirect_uri with force_redirect_protocol when mint enabled
 

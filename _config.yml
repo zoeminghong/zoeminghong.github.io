@@ -84,7 +84,7 @@ deploy:
 backup:
     type: git
     repository:
-       github: github:zoeminghong/zoeminghong.github.io.git,source
+       github: git@github:zoeminghong/zoeminghong.github.io.git,source
   
 avatar: /images/1.jpg
 duoshuo_shortname: appzone

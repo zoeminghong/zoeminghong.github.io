@@ -107,7 +107,7 @@
 <meta property="og:site_name" content="AppZone">
 <meta property="og:description" content="学习Git有一段时间了，一路上也一直在写有关于Git方面的文章，但总觉得不是我想要的，就是感觉有点肉肉的，不够直接，不够马上出效果，所以才有了这篇文章，当然这文章可能会不断更新和修正，希望读者可以作为一个工具文章使用，我也会努力将其优化的更加的符合工作场景">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-07-27T03:14:51.000Z">
+<meta property="og:updated_time" content="2018-03-23T05:42:53.442Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git实战">
 <meta name="twitter:description" content="学习Git有一段时间了，一路上也一直在写有关于Git方面的文章，但总觉得不是我想要的，就是感觉有点肉肉的，不够直接，不够马上出效果，所以才有了这篇文章，当然这文章可能会不断更新和修正，希望读者可以作为一个工具文章使用，我也会努力将其优化的更加的符合工作场景">
@@ -430,7 +430,7 @@
 <h4 id="本地新建Git工程"><a href="#本地新建Git工程" class="headerlink" title="本地新建Git工程"></a>本地新建Git工程</h4><blockquote>
 <p>现在打算将本地的工程，放到Git仓库进行托管了，并且远程Git仓库已经创建了该项目的工程</p>
 </blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>本地初始化工程，会生成一个.git文件</span><br><span class="line">git init</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span>将本地的工程与远程仓库中的项目进行关联（不用关心项目名不一致的问题）</span><br><span class="line"><span class="meta">#</span>此时本地工程与远程仓库已经建立了联系</span><br><span class="line">git remote add origin [git@rep.xx.com:zoeminghong/hello.git]</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span>将本地所有文件添加到Git中，进行监管</span><br><span class="line">git add .</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span>将内容提交 【提交注释】</span><br><span class="line">git commit -m "[...]"</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span>将本地的内容同步到远程仓库中</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>本地初始化工程，会生成一个.git文件</span><br><span class="line">git init</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span>将本地的工程与远程仓库中的项目进行关联（不用关心项目名不一致的问题）</span><br><span class="line"><span class="meta">#</span>此时本地工程与远程仓库已经建立了联系</span><br><span class="line">git remote add origin [git@rep.xx.com:zoeminghong/hello.git]</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>去除远程仓库绑定</span><br><span class="line">git remote remove origin</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span>将本地所有文件添加到Git中，进行监管</span><br><span class="line">git add .</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span>将内容提交 【提交注释】</span><br><span class="line">git commit -m "[...]"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>将本地的内容同步到远程仓库中</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
 <h4 id="显示某一个特定的提交的日志"><a href="#显示某一个特定的提交的日志" class="headerlink" title="显示某一个特定的提交的日志"></a>显示某一个特定的提交的日志</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git show [十六进制码]</span><br></pre></td></tr></table></figure>
 <h4 id="查看提交图"><a href="#查看提交图" class="headerlink" title="查看提交图"></a>查看提交图</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log --graph --pretty=oneline --abbrev-commit</span><br></pre></td></tr></table></figure>
 <h4 id="查看冲突未处理的文件列表"><a href="#查看冲突未处理的文件列表" class="headerlink" title="查看冲突未处理的文件列表"></a>查看冲突未处理的文件列表</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git ls-files -u</span><br></pre></td></tr></table></figure>
@@ -681,8 +681,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/20/wagon20170620/" rel="next" title="wagon插件使用">
-                <i class="fa fa-chevron-left"></i> wagon插件使用
+              <a href="/2016/11/08/git20161108/" rel="next" title="在场景中使用Git">
+                <i class="fa fa-chevron-left"></i> 在场景中使用Git
               </a>
             
           </div>
@@ -691,8 +691,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/24/strategy201706024/" rel="prev" title="设计模式——策略模式">
-                设计模式——策略模式 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/20/wagon20170620/" rel="prev" title="wagon插件使用">
+                wagon插件使用 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

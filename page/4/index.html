@@ -332,7 +332,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/05/20/task20160520/">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/05/20/sendmessage20160520/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="迹_Jason">
@@ -351,7 +351,7 @@
         
           <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2016/05/20/task20160520/" itemprop="url">Java定时任务</a></h2>
+                <a class="post-title-link" href="/2016/05/20/sendmessage20160520/" itemprop="url">消息推送原理</a></h2>
         
 
         <div class="post-meta">
@@ -401,10 +401,11 @@
 
       
         
-          <p>在java中一个完整定时任务需要由Timer、TimerTask两个类来配合完成。 API中是这样定义他们的，Timer：一种工具，线程用其安排以后在后台线程中执行的任务。可安排任务执行一次，或者定期重复执行。由TimerTask：Timer 安排为一次执行或重复执行的任务。我们可以这样理解<strong>Timer是一种定时器工具，用来在一个后台线程计划执行指定任务，而TimerTask一个抽象类，它的子类代表一个可以被Timer计划的任务。</strong><br>
+          <h2 id="消息模式"><a href="#消息模式" class="headerlink" title="消息模式"></a>消息模式</h2><p>归根结底，企业应用系统就是对数据的处理，而对于一个拥有多个子系统的企业应用系统而言，它的基础支撑无疑就是对消息的处理。与对象不同，消息本质上是一种数据结构（当然，对象也可以看做是一种特殊的消息），它包含消费者与服务双方都能识别的数据，这些数据需要在不同的进程（机器）之间进行传递，并可能会被多个完全不同的客户端消费。<strong>消息传递相较文件传递与远程过程调用（RPC）而言，似乎更胜一筹，因为它具有更好的平台无关性，并能够很好地支持并发与异步调用。</strong></p>
+<p>对于Web Service与RESTful而言，则可以看做是消息传递技术的一种衍生或封装。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/05/20/task20160520/#more" rel="contents">
+            <a class="btn" href="/2016/05/20/sendmessage20160520/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1249,136 +1250,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/04/20/fist/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="迹_Jason">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AppZone">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/04/20/fist/" itemprop="url">超越sublime的Visual Studio Code</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-20T00:00:00+08:00">2016-04-20</time>
-            
-
-            
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote>
-<p>在 Build 2015 大会上，微软除了发布了 新的 Windows 10 系统外，最大的惊喜莫过于宣布推出免费跨平台的 Visual Studio Code 编辑器了！经过一年的更新换代，现在迎来1.0正式版。</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/04/20/fist/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/04/20/octopress/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1454,6 +1325,136 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2016/04/20/octopress/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/04/20/fist/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="迹_Jason">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/04/20/fist/" itemprop="url">超越sublime的Visual Studio Code</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-20T00:00:00+08:00">2016-04-20</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote>
+<p>在 Build 2015 大会上，微软除了发布了 新的 Windows 10 系统外，最大的惊喜莫过于宣布推出免费跨平台的 Visual Studio Code 编辑器了！经过一年的更新换代，现在迎来1.0正式版。</p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/04/20/fist/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

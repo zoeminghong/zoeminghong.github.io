@@ -332,152 +332,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2018/04/18/bigdata20180418/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="迹_Jason">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AppZone">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/18/bigdata20180418/" itemprop="url">未命名</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-18T18:09:55+08:00">2018-04-18</time>
-            
-
-            
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>title: 记一次大数据爬坑<br>tags: code</p>
-<h2 id="date-2018-04-18"><a href="#date-2018-04-18" class="headerlink" title="date: 2018-04-18"></a>date: 2018-04-18</h2><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="Vertx"><a href="#Vertx" class="headerlink" title="Vertx"></a>Vertx</h3><p><code>Vertx</code>是一个高效的异步框架，支持<code>Java、Scala、JavaScript、Kotlin</code>等多种语言。在非性能调优的场景下，<code>TPS</code>可以高达2-3万，同时，支持多种数据源也提供了异步支持。</p>
-<h3 id="Phoenix"><a href="#Phoenix" class="headerlink" title="Phoenix"></a>Phoenix</h3><p>大数据的同学肯定对其很了解，是<code>Apache</code>基金会下的顶级工程，<code>Phoenix</code>帮助<code>Hbase</code>提供了<code>SQL</code>语法的支持，使难用的<code>Hbase</code>变得简单易用。</p>
-<h3 id="Hbase"><a href="#Hbase" class="headerlink" title="Hbase"></a>Hbase</h3><p>用于存储上百万的场景数据，</p>
-<h3 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h3><p>用于存储<code>Streaming</code>处理和<code>Batch</code>之后数据量比较少，对<code>SQL</code>查询要求比较高的场景数据。</p>
-<h3 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h3><p>用于存储统计数据，比如：<code>PV、UV</code>等类型数据。</p>
-<h2 id="爬坑日记"><a href="#爬坑日记" class="headerlink" title="爬坑日记"></a>爬坑日记</h2><h3 id="Scala版本导致的冲突问题"><a href="#Scala版本导致的冲突问题" class="headerlink" title="Scala版本导致的冲突问题"></a><code>Scala</code>版本导致的冲突问题</h3><p>由于<code>Vertx</code>提供的<code>Jar</code>只支持<code>Scala:2.12</code>版本，而本地环境使用的是<code>Scala:2.11</code>，出现下方错误信息之后，猜想是由于<code>Scala</code>版本问题导致，摆在我们面前的有两条路，一条是换<code>Scala</code>版本号，由于种种原因无法更换版本；另一个方案是选用Vertx提供的<code>Java Jar</code>，选择放弃使用<code>Scala</code>版本，使用<code>Java</code>版本的<code>Vertx</code>的<code>Jar</code>来实现。</p>
-<p><strong>错误信息</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com.github.mauricio.async.db.SSLConfiguration.&lt;init&gt;  scala.Product.$init$(Lscala/Product;)V</span><br></pre></td></tr></table></figure>
-<h3 id="Vertx包中Scala版本冲突"><a href="#Vertx包中Scala版本冲突" class="headerlink" title="Vertx包中Scala版本冲突"></a><code>Vertx</code>包中<code>Scala</code>版本冲突</h3><p>在尝试完成<code>Scala</code>包换为<code>Java</code>之后，问题依旧，分析错误信息，猜想可能是<code>com.github.mauricio</code>相关的包导致的问题，在通过<code>GitHub</code>和官网文档中找到了蛛丝马迹，该包是由<code>Scala</code>编写的，就迅速想到了版本号的问题，果不其然，选用的是<code>2.12</code>，马上将<code>Maven</code>文件进行修改，解决了这个问题。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.vertx<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>vertx-redis-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.vertx<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>vertx-mysql-postgresql-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-async_2.12<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.mauricio<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>db-async-common_2.12<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.mauricio<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>db-async-common_2.11<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.mauricio<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.2.21<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-async_2.11<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.mauricio<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.2.21<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h3 id="Phoenix包问题"><a href="#Phoenix包问题" class="headerlink" title="Phoenix包问题"></a><code>Phoenix</code>包问题</h3><p>项目中需要通过使用<code>JDBC</code>的方式连接<code>Phoenix</code>，在<code>Spark</code>项目中使用了如下的依赖实现</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.phoenix<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>phoenix-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;phoenix.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">classifier</span>&gt;</span>client<span class="tag">&lt;/<span class="name">classifier</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>但是出现了如下错误</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.NoSuchMethodError: com.jayway.jsonpath.spi.mapper.JacksonMappingProvider.&lt;init&gt;(jackson-databind)</span><br></pre></td></tr></table></figure>
-<p>猜测可能原因是包冲突，但发现<code>Maven</code>中不存在<code>jsonpath</code>该相应的依赖，故猜想可能是<code>jackson</code>包版本导致的冲突，故将parent中的依赖配置移到当前<code>pom</code>文件中，因为<code>Maven</code>是就近查找依赖的，但发现还是没有效果。由于<code>phoenix-client</code>是一个独立的包，无法对其<code>exclusion</code>操作，在同事的提示下，采用的解压该<code>Jar</code>包，找到了<code>jayway</code>相关目录，将该目录删除后进行重新打包，神奇的事发生了，启动成功了。</p>
-<h3 id="Phoenix-Driver问题"><a href="#Phoenix-Driver问题" class="headerlink" title="Phoenix Driver问题"></a>Phoenix Driver问题</h3><p>程序启动成功，但在测试<code>Vertx-JDBC</code>连接<code>Phoenix</code>时，出现找不到<code>Driver</code>问题，原来<code>phoenix-client</code>中无法引用到<code>org.apache.phoenix.jdbc.PhoenixDriver</code>，在<code>Google</code>之后，使用了如下的<code>Jar</code>方案</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.phoenix<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>phoenix-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;phoenix.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>问题就解决了。</p>
-<blockquote>
-<p>jdbc:phoenix:host1,host2:2181:/hbase</p>
-</blockquote>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2018/04/18/vertx-phoenix20180418/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -551,6 +405,134 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/04/18/vertx-phoenix20180418/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2018/04/18/bigdata20180418/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="迹_Jason">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/18/bigdata20180418/" itemprop="url">记一次大数据爬坑</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-18T00:00:00+08:00">2018-04-18</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="Vertx"><a href="#Vertx" class="headerlink" title="Vertx"></a>Vertx</h3><p><code>Vertx</code>是一个高效的异步框架，支持<code>Java、Scala、JavaScript、Kotlin</code>等多种语言。在非性能调优的场景下，<code>TPS</code>可以高达2-3万，同时，支持多种数据源也提供了异步支持。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/18/bigdata20180418/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

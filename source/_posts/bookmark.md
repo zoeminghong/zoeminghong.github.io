@@ -183,6 +183,10 @@ date: 2017-12-14
 
 [推荐些 AI 学习的书籍和资料](https://mp.weixin.qq.com/s/eav-eVqikk6thgPkkZHB0w)
 
+## 性能测试
+
+[JVM性能火焰图](https://toutiao.io/k/kqurww)
+
 ## PPT优质内容
 
 [Open-Source License](https://gist.github.com/lukas-h/2a5d00690736b4c3a7ba)

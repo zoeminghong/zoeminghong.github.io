@@ -78,13 +78,13 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github:zoeminghong/zoeminghong.github.io.git
+  repo: git@github.com:zoeminghong/zoeminghong.github.io.git
   branch: master
   
 backup:
     type: git
     repository:
-       github: git@github:zoeminghong/zoeminghong.github.io.git,source
+       github: git@github.com:zoeminghong/zoeminghong.github.io.git,source
   
 avatar: /images/1.jpg
 duoshuo_shortname: appzone

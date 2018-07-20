@@ -332,7 +332,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/05/25/enum20150525/">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/05/25/generic20160525/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="迹_Jason">
@@ -351,7 +351,7 @@
         
           <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2016/05/25/enum20150525/" itemprop="url">Java枚举全解析</a></h2>
+                <a class="post-title-link" href="/2016/05/25/generic20160525/" itemprop="url">Java泛型全解析</a></h2>
         
 
         <div class="post-meta">
@@ -401,138 +401,11 @@
 
       
         
-          <p>enum关键字与class和interface地位相同，其一样有成员变量、方法、可以实现一个或多个接口，也可以有构造器<br>
+          <p>把一个对象放进集合中之后，集合就会忘记这个对象的数据类型，当再次取出该对象时，该对象的编译类型就变成Object类型了</p>
+<p>为了解决上面的问题，就引出了泛型这一个概念<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/05/25/enum20150525/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/05/20/task20160520/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="迹_Jason">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AppZone">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/05/20/task20160520/" itemprop="url">Java定时任务</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-20T00:00:00+08:00">2016-05-20</time>
-            
-
-            
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在java中一个完整定时任务需要由Timer、TimerTask两个类来配合完成。 API中是这样定义他们的，Timer：一种工具，线程用其安排以后在后台线程中执行的任务。可安排任务执行一次，或者定期重复执行。由TimerTask：Timer 安排为一次执行或重复执行的任务。我们可以这样理解<strong>Timer是一种定时器工具，用来在一个后台线程计划执行指定任务，而TimerTask一个抽象类，它的子类代表一个可以被Timer计划的任务。</strong><br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/05/20/task20160520/#more" rel="contents">
+            <a class="btn" href="/2016/05/25/generic20160525/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -662,6 +535,134 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2016/05/20/sendmessage20160520/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/05/20/task20160520/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="迹_Jason">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/05/20/task20160520/" itemprop="url">Java定时任务</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-20T00:00:00+08:00">2016-05-20</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>在java中一个完整定时任务需要由Timer、TimerTask两个类来配合完成。 API中是这样定义他们的，Timer：一种工具，线程用其安排以后在后台线程中执行的任务。可安排任务执行一次，或者定期重复执行。由TimerTask：Timer 安排为一次执行或重复执行的任务。我们可以这样理解<strong>Timer是一种定时器工具，用来在一个后台线程计划执行指定任务，而TimerTask一个抽象类，它的子类代表一个可以被Timer计划的任务。</strong><br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/05/20/task20160520/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1506,7 +1507,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/04/20/octopress/">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/04/20/fist/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="迹_Jason">
@@ -1525,7 +1526,7 @@
         
           <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2016/04/20/octopress/" itemprop="url">教你如何建高逼格个人网站</a></h2>
+                <a class="post-title-link" href="/2016/04/20/fist/" itemprop="url">超越sublime的Visual Studio Code</a></h2>
         
 
         <div class="post-meta">
@@ -1576,11 +1577,11 @@
       
         
           <blockquote>
-<p>从大学开始我就希望能有一个自己的个人网站，觉得那样真的很酷，就自学了HTML和Java编程，从此踏上了码农搬砖的不归路。。。。现如今，建一个网站的成本真的是太低了，特别是有了GitHub以后，不懂代码的孩子都可以自己建站了。好，废话就放到最后说。</p>
+<p>在 Build 2015 大会上，微软除了发布了 新的 Windows 10 系统外，最大的惊喜莫过于宣布推出免费跨平台的 Visual Studio Code 编辑器了！经过一年的更新换代，现在迎来1.0正式版。</p>
 </blockquote>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/04/20/octopress/#more" rel="contents">
+            <a class="btn" href="/2016/04/20/fist/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

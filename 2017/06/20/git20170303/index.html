@@ -107,7 +107,7 @@
 <meta property="og:site_name" content="AppZone">
 <meta property="og:description" content="学习Git有一段时间了，一路上也一直在写有关于Git方面的文章，但总觉得不是我想要的，就是感觉有点肉肉的，不够直接，不够马上出效果，所以才有了这篇文章，当然这文章可能会不断更新和修正，希望读者可以作为一个工具文章使用，我也会努力将其优化的更加的符合工作场景">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-07-17T16:01:54.758Z">
+<meta property="og:updated_time" content="2018-11-21T06:03:40.132Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git实战">
 <meta name="twitter:description" content="学习Git有一段时间了，一路上也一直在写有关于Git方面的文章，但总觉得不是我想要的，就是感觉有点肉肉的，不够直接，不够马上出效果，所以才有了这篇文章，当然这文章可能会不断更新和修正，希望读者可以作为一个工具文章使用，我也会努力将其优化的更加的符合工作场景">
@@ -574,9 +574,7 @@
 <blockquote>
 <p>git log 参数说明：</p>
 <p>–author   指定作者<br>–stat   显示每次更新的文件修改统计信息，会列出具体文件列表<br>–shortstat    统计每个commit 的文件修改行数，包括增加，删除，但不列出文件列表：<br>–numstat   统计每个commit 的文件修改行数，包括增加，删除，并列出文件列表：</p>
-<p>-p 选项展开显示每次提交的内容差异，用 -2 则仅显示最近的两次更新<br>       例如：git log -p  -2<br>–name-only 仅在提交信息后显示已修改的文件清单<br>–name-status 显示新增、修改、删除的文件清单<br>–abbrev-commit 仅显示 SHA-1 的前几个字符，而非所有的 40 个字符<br>–relative-date 使用较短的相对时间显示（比如，“2 weeks ago”）<br>–graph 显示 ASCII 图形表示的分支合并历史<br>–pretty 使用其他格式显示历史提交信息。可用的选项包括 oneline，short，full，fuller 和 format（后跟指定格式）<br>       例如： git log –pretty=oneline ; git log –pretty=short ; git log –pretty=full ; git log –pretty=fuller<br>–pretty=tformat:   可以定制要显示的记录格式，这样的输出便于后期编程提取分析<br>       例如：git log –pretty=format:””%h - %an, %ar : %s””<br>       下面列出了常用的格式占位符写法及其代表的意义。<br>       选项       说明<br>       %H      提交对象（commit）的完整哈希字串<br>       %h      提交对象的简短哈希字串<br>       %T      树对象（tree）的完整哈希字串<br>       %t      树对象的简短哈希字串<br>       %P      父对象（parent）的完整哈希字串<br>       %p      父对象的简短哈希字串<br>       %an     作者（author）的名字<br>       %ae     作者的电子邮件地址<br>       %ad     作者修订日期（可以用 -date= 选项定制格式）<br>       %ar     作者修订日期，按多久以前的方式显示<br>       %cn     提交者(committer)的名字<br>       %ce     提交者的电子邮件地址<br>       %cd     提交日期<br>       %cr     提交日期，按多久以前的方式显示<br>       %s      提交说明<br>–since  限制显示输出的范围，<br>       例如： git log –since=2.weeks    显示最近两周的提交<br>       选项 说明<br>       -(n)    仅显示最近的 n 条提交<br>       –since, –after 仅显示指定时间之后的提交。<br>       –until, –before 仅显示指定时间之前的提交。<br>       –author 仅显示指定作者相关的提交。<br>       –committer 仅显示指定提交者相关的提交。</p>
-<pre><code>一些例子： git log --until=1.minute.ago // 一分钟之前的所有 log git log --since=1.day.ago //一天之内的log git log --since=1.hour.ago //一个小时之内的 log git log --since=`.month.ago --until=2.weeks.ago //一个月之前到半个月之前的log git
-</code></pre><p>log –since ==2013-08.01 –until=2013-09-07 //某个时间段的 log   git blame<br>看看某一个文件的相关历史记录<br>       例如：git blame index.html –date short</p>
+<p>-p 选项展开显示每次提交的内容差异，用 -2 则仅显示最近的两次更新<br>​       例如：git log -p  -2<br>–name-only 仅在提交信息后显示已修改的文件清单<br>–name-status 显示新增、修改、删除的文件清单<br>–abbrev-commit 仅显示 SHA-1 的前几个字符，而非所有的 40 个字符<br>–relative-date 使用较短的相对时间显示（比如，“2 weeks ago”）<br>–graph 显示 ASCII 图形表示的分支合并历史<br>–pretty 使用其他格式显示历史提交信息。可用的选项包括 oneline，short，full，fuller 和 format（后跟指定格式）<br>​       例如： git log –pretty=oneline ; git log –pretty=short ; git log –pretty=full ; git log –pretty=fuller<br>–pretty=tformat:   可以定制要显示的记录格式，这样的输出便于后期编程提取分析<br>​       例如：git log –pretty=format:””%h - %an, %ar : %s””<br>​       下面列出了常用的格式占位符写法及其代表的意义。<br>​       选项       说明<br>​       %H      提交对象（commit）的完整哈希字串<br>​       %h      提交对象的简短哈希字串<br>​       %T      树对象（tree）的完整哈希字串<br>​       %t      树对象的简短哈希字串<br>​       %P      父对象（parent）的完整哈希字串<br>​       %p      父对象的简短哈希字串<br>​       %an     作者（author）的名字<br>​       %ae     作者的电子邮件地址<br>​       %ad     作者修订日期（可以用 -date= 选项定制格式）<br>​       %ar     作者修订日期，按多久以前的方式显示<br>​       %cn     提交者(committer)的名字<br>​       %ce     提交者的电子邮件地址<br>​       %cd     提交日期<br>​       %cr     提交日期，按多久以前的方式显示<br>​       %s      提交说明<br>–since  限制显示输出的范围，<br>​       例如： git log –since=2.weeks    显示最近两周的提交<br>​       选项 说明<br>​       -(n)    仅显示最近的 n 条提交<br>​       –since, –after 仅显示指定时间之后的提交。<br>​       –until, –before 仅显示指定时间之前的提交。<br>​       –author 仅显示指定作者相关的提交。<br>​       –committer 仅显示指定提交者相关的提交。<br>​<br>​    一些例子： git log –until=1.minute.ago // 一分钟之前的所有 log git log –since=1.day.ago //一天之内的log git log –since=1.hour.ago //一个小时之内的 log git log –since=`.month.ago –until=2.weeks.ago //一个月之前到半个月之前的log git<br>log –since ==2013-08.01 –until=2013-09-07 //某个时间段的 log   git blame<br>看看某一个文件的相关历史记录<br>​       例如：git blame index.html –date short</p>
 </blockquote>
 <h4 id="子模块"><a href="#子模块" class="headerlink" title="子模块"></a>子模块</h4><p>保留子组件的现有目录结构的完整性，故而git创造了类似于maven中的module一样的功能，来实现子模块的管理</p>
 <p>打个比方：现在我有一个父工程A，其工程路径下面有五个子工程BCDEF，按照往常是要<code>git clone</code> 6个工程才可以完全下载成功，而且工程与工程之间的路径关系也不知道。现在有了gitmodules就可以直接下载A工程就可以了，其他的5个子工程都会自动下载。</p>
@@ -591,7 +589,7 @@
 <p>创建完成以后会生成<code>.gitmodules</code>与<code>.gitattributes</code>这两个文件</p>
 <p><code>.gitmodules</code>和<code>.git/config</code>保存着子模块的信息</p>
 <p>从远程仓库获取所有模块数据</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>方式一</span><br><span class="line">git clone --recursive [远程仓库地址]</span><br><span class="line"><span class="meta">#</span>方式二</span><br><span class="line">git clone [远程父仓库地址]</span><br><span class="line">cd [父模块路径]</span><br><span class="line">git submodule init</span><br><span class="line">git submodule update</span><br><span class="line">或者</span><br><span class="line">git submodule update --init --recursive</span><br><span class="line"></span><br><span class="line">cd [目标submodule]</span><br><span class="line">git branch -a</span><br><span class="line">git fetch origin [remote branch:remote branch] [new local branch:new local branch]</span><br><span class="line">git checkout [new local branch]</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>方式一</span><br><span class="line">git clone --recursive [远程仓库地址]</span><br><span class="line"><span class="meta">#</span>方式二</span><br><span class="line">git clone [远程父仓库地址]</span><br><span class="line">cd [父模块路径]</span><br><span class="line">git submodule init</span><br><span class="line">git submodule update</span><br><span class="line">或者</span><br><span class="line">git submodule update --init --recursive</span><br><span class="line">cd [目标submodule]</span><br><span class="line">git branch -a</span><br><span class="line">git fetch origin [remote branch:remote branch] [new local branch:new local branch]</span><br><span class="line">git checkout [new local branch]</span><br></pre></td></tr></table></figure>
 <p>删除子模块功能</p>
 <p>先清空<code>.gitmodules</code>中的内容</p>
 <p>再执行文件的删除</p>
@@ -690,8 +688,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/08/git20161108/" rel="next" title="在场景中使用Git">
-                <i class="fa fa-chevron-left"></i> 在场景中使用Git
+              <a href="/2017/06/20/wagon20170620/" rel="next" title="wagon插件使用">
+                <i class="fa fa-chevron-left"></i> wagon插件使用
               </a>
             
           </div>
@@ -700,8 +698,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/20/wagon20170620/" rel="prev" title="wagon插件使用">
-                wagon插件使用 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/24/strategy201706024/" rel="prev" title="设计模式——策略模式">
+                设计模式——策略模式 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

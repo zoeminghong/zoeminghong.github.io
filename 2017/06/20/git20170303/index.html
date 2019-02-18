@@ -107,7 +107,7 @@
 <meta property="og:site_name" content="AppZone">
 <meta property="og:description" content="学习Git有一段时间了，一路上也一直在写有关于Git方面的文章，但总觉得不是我想要的，就是感觉有点肉肉的，不够直接，不够马上出效果，所以才有了这篇文章，当然这文章可能会不断更新和修正，希望读者可以作为一个工具文章使用，我也会努力将其优化的更加的符合工作场景">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-22T08:28:55.415Z">
+<meta property="og:updated_time" content="2019-02-18T15:03:15.733Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git实战">
 <meta name="twitter:description" content="学习Git有一段时间了，一路上也一直在写有关于Git方面的文章，但总觉得不是我想要的，就是感觉有点肉肉的，不够直接，不够马上出效果，所以才有了这篇文章，当然这文章可能会不断更新和修正，希望读者可以作为一个工具文章使用，我也会努力将其优化的更加的符合工作场景">
@@ -441,6 +441,7 @@
 <blockquote>
 <p>但，上面的也可能存在问题，由于本地存在未被追踪的文件，并且远程仓库pull的时候也存在同名的文件，就会存在pull失败，在这种情况下，在<code>git stash</code>后面追加 <code>--include-untracked</code>，会将远程的文件与本地的文件融合</p>
 <p>stash只会保存当前索引和工作目录的状态，其保存的是add和commit的中间状态，如果还没有被git追踪的文件，是不会被记录的</p>
+<p>stash只保存被修改的文件内容，未被修改的文件内容不会被记录，在apply恢复的时候，也只会更新 stash 时被保存的内容</p>
 </blockquote>
 <h4 id="如果我对某文件进行了修改，但我不想要push到远程仓库，同时我又想获取最新的修改记录"><a href="#如果我对某文件进行了修改，但我不想要push到远程仓库，同时我又想获取最新的修改记录" class="headerlink" title="如果我对某文件进行了修改，但我不想要push到远程仓库，同时我又想获取最新的修改记录"></a>如果我对某文件进行了修改，但我不想要push到远程仓库，同时我又想获取最新的修改记录</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git stash save</span><br><span class="line">git pull --rebase</span><br></pre></td></tr></table></figure>
 <h4 id="如果暂存内容现在不想在当前分支恢复了，而是想单独起一个分支"><a href="#如果暂存内容现在不想在当前分支恢复了，而是想单独起一个分支" class="headerlink" title="如果暂存内容现在不想在当前分支恢复了，而是想单独起一个分支"></a>如果暂存内容现在不想在当前分支恢复了，而是想单独起一个分支</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git stash branch [newBranchName]</span><br></pre></td></tr></table></figure>
@@ -689,8 +690,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/20/wagon20170620/" rel="next" title="wagon插件使用">
-                <i class="fa fa-chevron-left"></i> wagon插件使用
+              <a href="/2016/11/08/git20161108/" rel="next" title="在场景中使用Git">
+                <i class="fa fa-chevron-left"></i> 在场景中使用Git
               </a>
             
           </div>
@@ -699,8 +700,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/24/strategy201706024/" rel="prev" title="设计模式——策略模式">
-                设计模式——策略模式 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/20/wagon20170620/" rel="prev" title="wagon插件使用">
+                wagon插件使用 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

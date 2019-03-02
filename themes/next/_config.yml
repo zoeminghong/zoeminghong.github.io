@@ -466,10 +466,10 @@ pangu: false
 
 # Disqus
 disqus:
-  enable: false
-  shortname:
+  enable: true
+  shortname: zerostech
   count: true
-  lazyload: false
+  lazyload: true
 
 # Hypercomments
 #hypercomments_id:
@@ -506,20 +506,19 @@ valine:
 
 # Gitment
 # Introduction: https://imsun.net/posts/gitment-introduction/
-gitment:
-  enable: true
-  mint: true # RECOMMEND, A mint on Gitment, to support count, language and proxy_gateway
-  count: true # Show comments count in post meta area
-  lazy: false # Comments lazy loading with a button
-  cleanly: false # Hide 'Powered by ...' on footer, and more
-  language: # Force language, or auto switch by theme
-  github_user: zoeminghong # MUST HAVE, Your Github Username
-  github_repo: zoeminghong.github.io # MUST HAVE, The name of the repo you use to store Gitment comments
-  client_id: 28e75865a9f3927a9914 # MUST HAVE, Github client id for the Gitment
-  client_secret: e95ab8387322deba5598f7d4ac2f56531e32491c # EITHER this or proxy_gateway, Github access secret token for the Gitment
-  proxy_gateway: # Address of api proxy, See: https://github.com/aimingoo/intersect
-  redirect_protocol: # Protocol of redirect_uri with force_redirect_protocol when mint enabled
-
+# gitment:
+#   enable: true
+#   mint: true # RECOMMEND, A mint on Gitment, to support count, language and proxy_gateway
+#   count: true # Show comments count in post meta area
+#   lazy: false # Comments lazy loading with a button
+#   cleanly: false # Hide 'Powered by ...' on footer, and more
+#   language: # Force language, or auto switch by theme
+#   github_user: zoeminghong # MUST HAVE, Your Github Username
+#   github_repo: zoeminghong.github.io # MUST HAVE, The name of the repo you use to store Gitment comments
+#   client_id: 28e75865a9f3927a9914 # MUST HAVE, Github client id for the Gitment
+#   client_secret: e95ab8387322deba5598f7d4ac2f56531e32491c # EITHER this or proxy_gateway, Github access secret token for the Gitment
+#   proxy_gateway: # Address of api proxy, See: https://github.com/aimingoo/intersect
+#   redirect_protocol: # Protocol of redirect_uri with force_redirect_protocol when mint enabled
 # Baidu Share
 # Available value:
 #    button | slide

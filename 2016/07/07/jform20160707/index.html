@@ -381,7 +381,8 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2016/07/07/jform20160707/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/07/07/jform20160707/" itemprop="commentsCount"></span>
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2016/07/07/jform20160707/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -521,8 +522,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/05/mongo20160705/" rel="next" title="MongoDB的Spring配置使用">
-                <i class="fa fa-chevron-left"></i> MongoDB的Spring配置使用
+              <a href="/2016/07/07/redis20160707/" rel="next" title="Spring的Redis配置与使用">
+                <i class="fa fa-chevron-left"></i> Spring的Redis配置与使用
               </a>
             
           </div>
@@ -531,8 +532,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/07/07/redis20160707/" rel="prev" title="Spring的Redis配置与使用">
-                Spring的Redis配置与使用 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/07/12/canvas20160712/" rel="prev" title="Canvas基础积累">
+                Canvas基础积累 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -561,9 +562,12 @@
 
   
     <div class="comments" id="comments">
-      
-        <div id="gitment-container"></div>
-      
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
     </div>
 
   
@@ -840,6 +844,45 @@
 
   
 
+  
+    <script id="dsq-count-scr" src="https://zerostech.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://zoeminghong.github.io/2016/07/07/jform20160707/';
+        this.page.identifier = '2016/07/07/jform20160707/';
+        this.page.title = 'JFormJS说明文档';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://zerostech.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        $(function () {
+          var offsetTop = $('#comments').offset().top - $(window).height();
+          if (offsetTop <= 0) {
+            // load directly when there's no a scrollbar
+            loadComments();
+          } else {
+            $(window).on('scroll.disqus_scroll', function () {
+              var scrollTop = document.documentElement.scrollTop;
+              if (scrollTop >= offsetTop) {
+                $(window).off('.disqus_scroll');
+                loadComments();
+              }
+            });
+          }
+        });
+      
+    </script>
+  
+
+
+
 
 
 	
@@ -854,48 +897,7 @@
 
 
 
-  
 
-
-
-
-
-
-<!-- LOCAL: You can save these files to your site and update links -->
-    
-        
-        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
-        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
-    
-<!-- END LOCAL -->
-
-    
-
-    
-      <script type="text/javascript">
-      function renderGitment(){
-        var gitment = new Gitmint({
-            id: '<%= page.title %>',
-            owner: 'zoeminghong',
-            repo: 'zoeminghong.github.io',
-            
-            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
-            
-            oauth: {
-            
-            
-                client_secret: 'e95ab8387322deba5598f7d4ac2f56531e32491c',
-            
-                client_id: '28e75865a9f3927a9914'
-            }});
-        gitment.render('gitment-container');
-      }
-
-      
-      renderGitment();
-      
-      </script>
-    
 
 
 

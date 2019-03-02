@@ -107,7 +107,7 @@
 <meta property="og:site_name" content="AppZone">
 <meta property="og:description" content="学习Git有一段时间了，一路上也一直在写有关于Git方面的文章，但总觉得不是我想要的，就是感觉有点肉肉的，不够直接，不够马上出效果，所以才有了这篇文章，当然这文章可能会不断更新和修正，希望读者可以作为一个工具文章使用，我也会努力将其优化的更加的符合工作场景">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-02-18T15:03:15.733Z">
+<meta property="og:updated_time" content="2019-02-18T15:59:22.920Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git实战">
 <meta name="twitter:description" content="学习Git有一段时间了，一路上也一直在写有关于Git方面的文章，但总觉得不是我想要的，就是感觉有点肉肉的，不够直接，不够马上出效果，所以才有了这篇文章，当然这文章可能会不断更新和修正，希望读者可以作为一个工具文章使用，我也会努力将其优化的更加的符合工作场景">
@@ -381,7 +381,8 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2017/06/20/git20170303/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2017/06/20/git20170303/" itemprop="commentsCount"></span>
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/06/20/git20170303/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -730,9 +731,12 @@
 
   
     <div class="comments" id="comments">
-      
-        <div id="gitment-container"></div>
-      
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
     </div>
 
   
@@ -1009,6 +1013,45 @@
 
   
 
+  
+    <script id="dsq-count-scr" src="https://zerostech.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://zoeminghong.github.io/2017/06/20/git20170303/';
+        this.page.identifier = '2017/06/20/git20170303/';
+        this.page.title = 'Git实战';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://zerostech.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        $(function () {
+          var offsetTop = $('#comments').offset().top - $(window).height();
+          if (offsetTop <= 0) {
+            // load directly when there's no a scrollbar
+            loadComments();
+          } else {
+            $(window).on('scroll.disqus_scroll', function () {
+              var scrollTop = document.documentElement.scrollTop;
+              if (scrollTop >= offsetTop) {
+                $(window).off('.disqus_scroll');
+                loadComments();
+              }
+            });
+          }
+        });
+      
+    </script>
+  
+
+
+
 
 
 	
@@ -1023,48 +1066,7 @@
 
 
 
-  
 
-
-
-
-
-
-<!-- LOCAL: You can save these files to your site and update links -->
-    
-        
-        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
-        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
-    
-<!-- END LOCAL -->
-
-    
-
-    
-      <script type="text/javascript">
-      function renderGitment(){
-        var gitment = new Gitmint({
-            id: '<%= page.title %>',
-            owner: 'zoeminghong',
-            repo: 'zoeminghong.github.io',
-            
-            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
-            
-            oauth: {
-            
-            
-                client_secret: 'e95ab8387322deba5598f7d4ac2f56531e32491c',
-            
-                client_id: '28e75865a9f3927a9914'
-            }});
-        gitment.render('gitment-container');
-      }
-
-      
-      renderGitment();
-      
-      </script>
-    
 
 
 

@@ -466,7 +466,7 @@ pangu: false
 
 # Disqus
 disqus:
-  enable: true
+  enable: false
   shortname: zerostech
   count: true
   lazyload: true

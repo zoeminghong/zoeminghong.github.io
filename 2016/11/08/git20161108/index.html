@@ -375,6 +375,17 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/11/08/git20161108/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2016/11/08/git20161108/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -548,8 +559,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/20/wagon20170620/" rel="prev" title="wagon插件使用">
-                wagon插件使用 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/20/git20170303/" rel="prev" title="Git实战">
+                Git实战 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -575,6 +586,16 @@
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
 
   
 
@@ -850,6 +871,45 @@
 
   
 
+  
+    <script id="dsq-count-scr" src="https://zerostech.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://zoeminghong.github.io/2016/11/08/git20161108/';
+        this.page.identifier = '2016/11/08/git20161108/';
+        this.page.title = '在场景中使用Git';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://zerostech.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        $(function () {
+          var offsetTop = $('#comments').offset().top - $(window).height();
+          if (offsetTop <= 0) {
+            // load directly when there's no a scrollbar
+            loadComments();
+          } else {
+            $(window).on('scroll.disqus_scroll', function () {
+              var scrollTop = document.documentElement.scrollTop;
+              if (scrollTop >= offsetTop) {
+                $(window).off('.disqus_scroll');
+                loadComments();
+              }
+            });
+          }
+        });
+      
+    </script>
+  
+
+
+
 
 
 	
@@ -861,10 +921,6 @@
   
 
 
-
-
-
-  
 
 
 

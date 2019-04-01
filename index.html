@@ -332,6 +332,170 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2019/04/01/记一次 Git 管理经历20190401/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="迹_Jason">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/01/记一次 Git 管理经历20190401/" itemprop="url">未命名</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-01T21:29:08+08:00">2019-04-01</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/04/01/记一次 Git 管理经历20190401/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2019/04/01/记一次 Git 管理经历20190401/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="记一次-Git-管理经历"><a href="#记一次-Git-管理经历" class="headerlink" title="记一次 Git 管理经历"></a>记一次 Git 管理经历</h1><p>随着负责的项目越来越大，出现了专人维护一个模块的可能，业务与模块划分变得清晰可见，但出现了如下几个问题：</p>
+<ul>
+<li>Source 变的很重</li>
+<li>模块版本管理变得不灵活</li>
+<li>开发人员被迫接受很多不要关注的代码</li>
+</ul>
+<p>以上问题，促使我寻找一种方案解决这个问题。先简单介绍一下我们的项目构成，由 DMP、DCP、DOP 三个主要业务模块构成，DCP 与其他两个模块之间不存在任何直接关系，DOP 依赖了 DMP 提供的相应基础服务包，DMP 也相对独立，三个模块存在各自发版计划，基于现状，会采用统一的版本号进行管理，这显然是不科学的，所以我提出了使用 <code>GIt Submodule</code> 来解决这个问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">|-docs</span><br><span class="line">|-apps</span><br><span class="line">|--dop</span><br><span class="line">|--ext</span><br><span class="line">|--toolkit</span><br><span class="line">|-sources</span><br><span class="line">|--basics</span><br><span class="line">|--components</span><br><span class="line">|--templates</span><br><span class="line">|--plugins</span><br><span class="line">|--terminals</span><br><span class="line">|-examples</span><br></pre></td></tr></table></figure>
+<p>DMP、DCP、DOP 三个业务模块分别创建一个 Git 进行维护。同时，例如：<code>Basic</code>、<code>Env</code> 、<code>Template</code> 等公共模块都作为子模块进行管理。</p>
+<p><strong>DMP</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">|-docs</span><br><span class="line">|-apps</span><br><span class="line">|--dop(与DOP共用子模块)</span><br><span class="line">|--ext</span><br><span class="line">|--toolkit</span><br><span class="line">|-sources</span><br><span class="line">|--basics(与DOP共用子模块)</span><br><span class="line">|--components</span><br><span class="line">|--templates(与DOP共用子模块)</span><br><span class="line">|--terminals</span><br><span class="line">|-examples(子模块，权限等级可以比较低，以供他人学习查看)</span><br></pre></td></tr></table></figure>
+<p><strong>DCP</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">|-docs</span><br><span class="line">|--toolkit</span><br><span class="line">|-sources</span><br><span class="line">|--components</span><br><span class="line">|--plugins</span><br><span class="line">|--terminals</span><br></pre></td></tr></table></figure>
+<p><strong>DOP</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">|-docs</span><br><span class="line">|-apps(与DOP共用子模块)</span><br><span class="line">|-sources</span><br><span class="line">|--basics(与DMP共用子模块)</span><br><span class="line">|--components</span><br><span class="line">|--templates(与DMP共用子模块)</span><br><span class="line">|--terminals</span><br></pre></td></tr></table></figure>
+<p>看似好像模块变多了，但各个业务变得清晰，版本可控，公共部分进行 <code>Git Submodule</code> ，使开发者只要关注需要关注的就行了，模块之间的权限也变的灵活。</p>
+<h2 id="Git-Submodule-使用"><a href="#Git-Submodule-使用" class="headerlink" title="Git Submodule 使用"></a><code>Git Submodule</code> 使用</h2><blockquote>
+<p>基于已有项目进行改造</p>
+</blockquote>
+<ul>
+<li>首先设计需要被 Submodule 的模块，并相应的 <code>Git Repository</code> 创建。</li>
+<li>将各个子模块的最新数据进行 <code>git push</code> 到相应的远程仓库中，这样子模块的代码已经被管理起来了</li>
+<li>执行 <code>git submodule add</code> ，需要将相应的子模块目录删除才能执行</li>
+</ul>
+<h3 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h3><h4 id="初始化-submodule-项目"><a href="#初始化-submodule-项目" class="headerlink" title="初始化 submodule 项目"></a>初始化 submodule 项目</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone --recursive [远程仓库地址]</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone [远程父仓库地址]</span><br><span class="line">git submodule update --init --recursive</span><br><span class="line">git submodule foreach 'git checkout master; git pull'</span><br></pre></td></tr></table></figure>
+<h4 id="变更-submodule-项目路径"><a href="#变更-submodule-项目路径" class="headerlink" title="变更 submodule 项目路径"></a>变更 submodule 项目路径</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Update .gitmodules</span><br><span class="line">git mv oldpath newpath</span><br><span class="line">git rm oldpath</span><br><span class="line">git add newpath</span><br><span class="line">git submodule sync</span><br></pre></td></tr></table></figure>
+<h4 id="如何优雅的修改项目版本号"><a href="#如何优雅的修改项目版本号" class="headerlink" title="如何优雅的修改项目版本号"></a>如何优雅的修改项目版本号</h4><p><a href="https://blog.csdn.net/liuxiao723846/article/details/81540919" target="_blank" rel="noopener">参照</a></p>
+<h4 id="submodule-其他命令参照"><a href="#submodule-其他命令参照" class="headerlink" title="submodule 其他命令参照"></a>submodule 其他命令参照</h4><p><a href="https://juejin.im/entry/59a0046b518825243d1f05be" target="_blank" rel="noopener">参照</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2019/01/30/HBase_2.0_协处理器实现/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -890,145 +1054,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2018/04/18/bigdata20180418/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="迹_Jason">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AppZone">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/18/bigdata20180418/" itemprop="url">记一次大数据爬坑</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-18T00:00:00+08:00">2018-04-18</time>
-            
-
-            
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/04/18/bigdata20180418/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/04/18/bigdata20180418/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="Vertx"><a href="#Vertx" class="headerlink" title="Vertx"></a>Vertx</h3><p><code>Vertx</code>是一个高效的异步框架，支持<code>Java、Scala、JavaScript、Kotlin</code>等多种语言。在非性能调优的场景下，<code>TPS</code>可以高达2-3万，同时，支持多种数据源也提供了异步支持。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/18/bigdata20180418/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2018/04/18/vertx-phoenix20180418/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1168,7 +1193,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2017/12/21/springcloud网关调优20171221/">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2018/04/18/bigdata20180418/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="迹_Jason">
@@ -1187,7 +1212,7 @@
         
           <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/12/21/springcloud网关调优20171221/" itemprop="url">网关调优指导书</a></h2>
+                <a class="post-title-link" href="/2018/04/18/bigdata20180418/" itemprop="url">记一次大数据爬坑</a></h2>
         
 
         <div class="post-meta">
@@ -1199,7 +1224,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-21T00:00:00+08:00">2017-12-21</time>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-18T00:00:00+08:00">2018-04-18</time>
             
 
             
@@ -1217,9 +1242,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/12/21/springcloud网关调优20171221/#comments" itemprop="discussionUrl">
+                <a href="/2018/04/18/bigdata20180418/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/12/21/springcloud网关调优20171221/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/04/18/bigdata20180418/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1248,10 +1273,10 @@
 
       
         
-          <p>由于最近在使用Spring Cloud的Zuul网关的过程中，发现超时的可能性很多，出于性能的调优，所有想通过测试，了解一些参数的作用。在文章最后贴上推荐方案。</p>
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="Vertx"><a href="#Vertx" class="headerlink" title="Vertx"></a>Vertx</h3><p><code>Vertx</code>是一个高效的异步框架，支持<code>Java、Scala、JavaScript、Kotlin</code>等多种语言。在非性能调优的场景下，<code>TPS</code>可以高达2-3万，同时，支持多种数据源也提供了异步支持。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/12/21/springcloud网关调优20171221/#more" rel="contents">
+            <a class="btn" href="/2018/04/18/bigdata20180418/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1446,6 +1471,145 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2017/12/21/springcloud网关调优20171221/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="迹_Jason">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/21/springcloud网关调优20171221/" itemprop="url">网关调优指导书</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-21T00:00:00+08:00">2017-12-21</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/21/springcloud网关调优20171221/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/12/21/springcloud网关调优20171221/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>由于最近在使用Spring Cloud的Zuul网关的过程中，发现超时的可能性很多，出于性能的调优，所有想通过测试，了解一些参数的作用。在文章最后贴上推荐方案。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/12/21/springcloud网关调优20171221/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2017/12/14/bookmark/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1570,145 +1734,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2017/12/01/springcloudfegin20171201/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="迹_Jason">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AppZone">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/01/springcloudfegin20171201/" itemprop="url">Feign 如何支持进行文件上传</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-01T00:00:00+08:00">2017-12-01</time>
-            
-
-            
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/12/01/springcloudfegin20171201/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/12/01/springcloudfegin20171201/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>最近，别的项目组提出需要<code>SDK</code>，就利用Feign做了一个，在此期间发现上传文件是一个坑，正常的实现是无法支持文件上传，需要进行对资源有一个<code>Convert</code>。为了避免大家像我一样，继续掉坑里，就出现了这篇文章的初衷。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/12/01/springcloudfegin20171201/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1760,7 +1785,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">43</span>
+                    <span class="site-state-item-count">44</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

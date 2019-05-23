@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.6" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=6.0.6">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.0.6">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.0.6">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=6.0.6" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.0.6',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="HBase Thrift with Python说在文前 本文内容是基于 Centos 7、HDP 3.0.0、HBase 2.0.0、Python 2.7 环境下，其他环境的童鞋选择性进行参考。 Thrift 安装在 HBase 服务节点上即可。 HBase 实现了两套Thrift Server服务，有两种 Thrift IDL 文件，提供了两套数据结构:  第一套有 TCell， Column">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AppZone">
+<meta property="og:url" content="http://zoeminghong.github.io/2019/05/08/hbase_thrift/index.html">
+<meta property="og:site_name" content="AppZone">
+<meta property="og:description" content="HBase Thrift with Python说在文前 本文内容是基于 Centos 7、HDP 3.0.0、HBase 2.0.0、Python 2.7 环境下，其他环境的童鞋选择性进行参考。 Thrift 安装在 HBase 服务节点上即可。 HBase 实现了两套Thrift Server服务，有两种 Thrift IDL 文件，提供了两套数据结构:  第一套有 TCell， Column">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://zoeminghong.github.io/2019/05/08/hbase_thrift/image-20190509111551665.png">
+<meta property="og:image" content="http://zoeminghong.github.io/2019/05/08/hbase_thrift/image-20190508180631438.png?lastModify=1557320005">
+<meta property="og:image" content="http://zoeminghong.github.io/2019/05/08/hbase_thrift/image-20190508181026068.png?lastModify=1557320005">
+<meta property="og:updated_time" content="2019-05-23T07:24:11.040Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AppZone">
+<meta name="twitter:description" content="HBase Thrift with Python说在文前 本文内容是基于 Centos 7、HDP 3.0.0、HBase 2.0.0、Python 2.7 环境下，其他环境的童鞋选择性进行参考。 Thrift 安装在 HBase 服务节点上即可。 HBase 实现了两套Thrift Server服务，有两种 Thrift IDL 文件，提供了两套数据结构:  第一套有 TCell， Column">
+<meta name="twitter:image" content="http://zoeminghong.github.io/2019/05/08/hbase_thrift/image-20190509111551665.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://zoeminghong.github.io/2019/05/08/hbase_thrift/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title> | AppZone</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">AppZone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">分享快乐，感受科技的温度</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      首页</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-spring-boot">
+    <a href="/tags/spring-boot" rel="section">
+      SpringBoot</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-spring-cloud">
+    <a href="/tags/spring-cloud" rel="section">
+      SpringCloud</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-code">
+    <a href="/tags/code" rel="section">
+      Sharing</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives" rel="section">
+      归档</a>
+</li>
+
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2019/05/08/hbase_thrift/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="迹_Jason">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline"></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-08T16:35:55+08:00">2019-05-08</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/05/08/hbase_thrift/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2019/05/08/hbase_thrift/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="HBase-Thrift-with-Python"><a href="#HBase-Thrift-with-Python" class="headerlink" title="HBase Thrift with Python"></a>HBase Thrift with Python</h1><p><strong>说在文前</strong></p>
+<p>本文内容是基于 <code>Centos 7、HDP 3.0.0、HBase 2.0.0、Python 2.7</code> 环境下，其他环境的童鞋选择性进行参考。</p>
+<p>Thrift 安装在 HBase 服务节点上即可。</p>
+<p>HBase 实现了两套Thrift Server服务，有两种 Thrift IDL 文件，提供了两套数据结构:</p>
+<ul>
+<li>第一套有 TCell， ColumnDescriptor，TRegionInfo 等，它的 API 比较全，它不仅有读写 API，同时也有创建删除等 API；</li>
+<li>第二套有 TTimeRange, TColumn, TColumnValue 等，它更加接近 HBase Java API 的调用方式，但是它的 API 比较少，只有读写表的API），它们最后都是通过 HBase Client 的 Java  API 来完成操作。</li>
+</ul>
+<h2 id="安装-Thrift"><a href="#安装-Thrift" class="headerlink" title="安装 Thrift"></a>安装 Thrift</h2><h3 id="安装依赖包"><a href="#安装依赖包" class="headerlink" title="安装依赖包"></a>安装依赖包</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y automake libtool flex bison pkgconfig gcc-c++ libevent-devel zlib-devel python-devel ruby-devel openssl-devel</span><br></pre></td></tr></table></figure>
+<h3 id="安装-boost-CentOS-7-必做"><a href="#安装-boost-CentOS-7-必做" class="headerlink" title="安装 boost (CentOS 7 必做)"></a>安装 boost (CentOS 7 必做)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://dl.bintray.com/boostorg/release/1.64.0/source/boost_1_64_0.tar.gz</span><br><span class="line">tar zxvf boost_1_64_0.tar.gz</span><br><span class="line">cd boost_1_64_0</span><br><span class="line">./bootstrap.sh</span><br><span class="line">./b2 install</span><br></pre></td></tr></table></figure>
+<h3 id="下载-Thrift"><a href="#下载-Thrift" class="headerlink" title="下载 Thrift"></a>下载 Thrift</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wget https://archive.apache.org/dist/thrift/0.10.0/thrift-0.10.0.tar.gz</span><br><span class="line">tar zxvf thrift-0.10.0.tar.gz</span><br><span class="line">cd thrift-0.10.0/</span><br><span class="line">./configure  或者 ./configure --with-boost=/usr/local  --without-java --without-php</span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line"># 进行确认安装成功</span><br><span class="line">thrift -help</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>0.10.0 版本之前的不支持 python 3.5</p>
+</blockquote>
+<p>生成 <code>hbase.thrift</code></p>
+<p><code>HDP</code> 下 HBase 相应的安装目录下本身就已经存在 <code>hbase.thrift</code> 文件了，所以我们不需要自行创建了。</p>
+<p>生成指定语言的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># hdp hbase.thrift 文件路径</span><br><span class="line">cd /usr/hdp/3.0.0.0-1634/hbase/include/thrift/</span><br><span class="line"># 生成 python</span><br><span class="line"># 该路径下存在 thrift1 和 thrift2 两种，可以自行选择</span><br><span class="line">thrift -gen py hbase1.thrift 或 thrift -gen py hbase2.thrift</span><br></pre></td></tr></table></figure>
+<p>执行完该命令之后，会生成一个 gen-py 目录，将该目录下 hbase 文件下载到本地项目中。(hbase-1 请忽略)</p>
+<p><img src="/2019/05/08/hbase_thrift/image-20190509111551665.png" alt="image-20190509111551665"></p>
+<h3 id="启动-Thrift-服务"><a href="#启动-Thrift-服务" class="headerlink" title="启动 Thrift 服务"></a>启动 Thrift 服务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/hdp/3.0.0.0-1634/hbase/bin/</span><br><span class="line">./hbase-daemon.sh start thrift -p 9090 --infoport 8086</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>日志路径为 /var/log/hbase/</p>
+</blockquote>
+<p><strong>使用 Thrift 2 模式</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./hbase-daemon.sh start thrift2 -p 9090 --infoport 8086</span><br><span class="line">./hbase-daemon.sh stop thrift</span><br></pre></td></tr></table></figure>
+<h3 id="Python-方式连接"><a href="#Python-方式连接" class="headerlink" title="Python 方式连接"></a>Python 方式连接</h3><h4 id="Thrift-1-模式"><a href="#Thrift-1-模式" class="headerlink" title="Thrift_1 模式"></a>Thrift_1 模式</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> thrift.transport.TSocket <span class="keyword">import</span> TSocket</span><br><span class="line"><span class="keyword">from</span> thrift.transport.TTransport <span class="keyword">import</span> TBufferedTransport</span><br><span class="line"><span class="keyword">from</span> thrift.protocol <span class="keyword">import</span> TBinaryProtocol</span><br><span class="line"><span class="keyword">from</span> hbase <span class="keyword">import</span> Hbase</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    transport = TBufferedTransport(TSocket(<span class="string">'10.200.168.18'</span>, <span class="number">9090</span>))</span><br><span class="line">    transport.open()</span><br><span class="line">    protocol = TBinaryProtocol.TBinaryProtocol(transport)</span><br><span class="line">    client = Hbase.Client(protocol)</span><br><span class="line">    client.get()</span><br><span class="line">    print(client.getTableNames())</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>hbase 源于 上文中 hbase 目录文件包</p>
+</blockquote>
+<h4 id="Thrift-2-模式"><a href="#Thrift-2-模式" class="headerlink" title="Thrift_2 模式"></a>Thrift_2 模式</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> thrift.transport.TSocket <span class="keyword">import</span> TSocket</span><br><span class="line"><span class="keyword">from</span> thrift.transport.TTransport <span class="keyword">import</span> TBufferedTransport</span><br><span class="line"><span class="keyword">from</span> thrift.protocol <span class="keyword">import</span> TBinaryProtocol</span><br><span class="line"><span class="keyword">from</span> hbase <span class="keyword">import</span> THBaseService</span><br><span class="line"><span class="keyword">from</span> hbase.ttypes <span class="keyword">import</span> TGet</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    logging.basicConfig(level=logging.DEBUG)</span><br><span class="line">    transport = TBufferedTransport(TSocket(<span class="string">'10.200.168.18'</span>, <span class="number">9090</span>))</span><br><span class="line">    transport.open()</span><br><span class="line">    protocol = TBinaryProtocol.TBinaryProtocol(transport)</span><br><span class="line">    client = THBaseService.Client(protocol)</span><br><span class="line">    tget = TGet(row = <span class="string">'321ahah'</span>)</span><br><span class="line">    tresult = client.get(<span class="string">'shop'</span>, tget)</span><br><span class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> tresult.columnValues:</span><br><span class="line">        print(col.qualifier, <span class="string">'='</span>, col.value)</span><br><span class="line">    print(client.send_get())</span><br><span class="line">    transport.close()</span><br></pre></td></tr></table></figure>
+<h2 id="Kerberos-On-Thrift"><a href="#Kerberos-On-Thrift" class="headerlink" title="Kerberos On Thrift"></a>Kerberos On Thrift</h2><h3 id="服务配置"><a href="#服务配置" class="headerlink" title="服务配置"></a>服务配置</h3><p><code>core-site.xml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hadoop.proxyuser.hbase.groups=*</span><br><span class="line">hadoop.proxyuser.hbase.hosts=*</span><br></pre></td></tr></table></figure>
+<p><code>hbase-site.xml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hbase.thrift.security.qop=auth</span><br><span class="line">hbase.thrift.support.proxyuser=true</span><br><span class="line">hbase.regionserver.thrift.http=false  # 使用http方式设为 true，binary 方式设为 false</span><br><span class="line">hbase.thrift.keytab.file=/etc/security/keytabs/hbase.service.keytab </span><br><span class="line">hbase.thrift.kerberos.principal=hbase/_HOST@DEVDIP.COM </span><br><span class="line">hbase.security.authentication.spnego.kerberos.keytab=/etc/security/keytabs/spnego.service.keytab </span><br><span class="line">hbase.security.authentication.spnego.kerberos.principal=HTTP/_HOST@DEVDIP.COM</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>重启 HDFS 和 HBase</p>
+</blockquote>
+<h3 id="重启-Thrift-服务"><a href="#重启-Thrift-服务" class="headerlink" title="重启 Thrift 服务"></a>重启 Thrift 服务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 停止</span><br><span class="line">./hbase-daemon.sh stop thrift</span><br><span class="line"># 启动</span><br><span class="line">kinit -kt /etc/security/keytabs/hbase.headless.keytab hbase-dev_dmp &amp; /usr/hdp/3.0.0.0-1634/hbase/bin/hbase-daemon.sh start thrift -p 9090 --infoport 8086</span><br><span class="line"># To test the thrift server in http mode the syntax is:</span><br><span class="line">hbase org.apache.hadoop.hbase.thrift.HttpDoAsClient DEVDIP.ORG 9090 hbase true</span><br><span class="line"># to test in binary mode the syntax is:</span><br><span class="line">hbase org.apache.hadoop.hbase.thrift.DemoClient DEVDIP.ORG 9090 true</span><br></pre></td></tr></table></figure>
+<p>示例</p>
+<p><img src="/2019/05/08/hbase_thrift/image-20190508180631438.png?lastModify=1557320005" alt="img"></p>
+<p><code>/var/log/hbase</code></p>
+<p><img src="/2019/05/08/hbase_thrift/image-20190508181026068.png?lastModify=1557320005" alt="img"></p>
+<p><a href="https://community.hortonworks.com/articles/87655/start-and-test-hbase-thrift-server-in-a-kerberised.html" target="_blank" rel="noopener">参考文章</a></p>
+<h3 id="Python-方式连接-1"><a href="#Python-方式连接-1" class="headerlink" title="Python 方式连接"></a>Python 方式连接</h3><h4 id="Thrift-1-模式-1"><a href="#Thrift-1-模式-1" class="headerlink" title="Thrift_1 模式"></a>Thrift_1 模式</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">from</span> thrift.transport <span class="keyword">import</span> TSocket</span><br><span class="line"><span class="keyword">from</span> thrift.protocol <span class="keyword">import</span> TBinaryProtocol</span><br><span class="line"><span class="keyword">from</span> thrift.transport <span class="keyword">import</span> TTransport</span><br><span class="line"><span class="keyword">from</span> hbase <span class="keyword">import</span> Hbase</span><br><span class="line"></span><br><span class="line"><span class="comment"># Apache HBase Thrift server coordinates (network location)</span></span><br><span class="line">thriftServer = <span class="string">"dev-dmp5.fengdai.org"</span></span><br><span class="line">thriftPort = <span class="number">9090</span></span><br><span class="line"><span class="comment"># The service name is the "primary" component of the Kerberos principal the</span></span><br><span class="line"><span class="comment"># Thrift server uses.</span></span><br><span class="line"><span class="comment"># See: http://web.mit.edu/kerberos/krb5-1.5/krb5-1.5.4/doc/krb5-user/What-is-a-Kerberos-Principal_003f.html</span></span><br><span class="line"><span class="comment"># e.g. For a server principal of 'hbase/localhost@EXAMPLE.COM', the primary is "hbase"</span></span><br><span class="line">saslServiceName = <span class="string">"hbase"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># HBase table and data information</span></span><br><span class="line">tableName = <span class="string">'demo_table'</span></span><br><span class="line">row = <span class="string">'test2'</span></span><br><span class="line">colName = <span class="string">"cf:name"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="comment"># Open a socket to the server</span></span><br><span class="line">    sock = TSocket.TSocket(thriftServer, thriftPort)</span><br><span class="line">    <span class="comment"># Set up a SASL transport.</span></span><br><span class="line">    transport = TTransport.TSaslClientTransport(sock, thriftServer, saslServiceName)</span><br><span class="line">    transport.open()</span><br><span class="line">    <span class="comment"># Use the Binary protocol (must match your Thrift server's expected protocol)</span></span><br><span class="line">    protocol = TBinaryProtocol.TBinaryProtocol(transport)</span><br><span class="line"></span><br><span class="line">    client = Hbase.Client(protocol)</span><br><span class="line">    <span class="comment"># Pass the above to the generated HBase clietn</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Fetch a row from HBase</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"Row=&gt;%s"</span> % (client.getRow(tableName, row, &#123;&#125;))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Cleanup</span></span><br><span class="line">    transport.close()</span><br></pre></td></tr></table></figure>
+<h4 id="Thrift-2-模式-1"><a href="#Thrift-2-模式-1" class="headerlink" title="Thrift_2 模式"></a>Thrift_2 模式</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">from</span> thrift.protocol <span class="keyword">import</span> TBinaryProtocol</span><br><span class="line"><span class="keyword">from</span> thrift.transport <span class="keyword">import</span> TSocket</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> hbase <span class="keyword">import</span> THBaseService</span><br><span class="line"><span class="keyword">from</span> hbase.ttypes <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># Apache HBase Thrift server coordinates (network location)</span></span><br><span class="line">thriftServer = <span class="string">"dev-dmp5.fengdai.org"</span></span><br><span class="line">thriftPort = <span class="number">9090</span></span><br><span class="line"><span class="comment"># The service name is the "primary" component of the Kerberos principal the</span></span><br><span class="line"><span class="comment"># Thrift server uses.</span></span><br><span class="line"><span class="comment"># See: http://web.mit.edu/kerberos/krb5-1.5/krb5-1.5.4/doc/krb5-user/What-is-a-Kerberos-Principal_003f.html</span></span><br><span class="line"><span class="comment"># e.g. For a server principal of 'hbase/localhost@EXAMPLE.COM', the primary is "hbase"</span></span><br><span class="line">saslServiceName = <span class="string">'hbase'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># HBase table and data information</span></span><br><span class="line">tableName = <span class="string">'DMP:demo'</span></span><br><span class="line">row = <span class="string">'test2'</span></span><br><span class="line">coulumnValue1 = TColumnValue(<span class="string">'cf'</span>, <span class="string">'name'</span>)</span><br><span class="line">coulumnValues = [coulumnValue1]</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    socket = TSocket.TSocket(thriftServer, thriftPort)</span><br><span class="line">    transport = TTransport.TSaslClientTransport(socket,host=thriftServer,service=saslServiceName,mechanism=<span class="string">'GSSAPI'</span>)</span><br><span class="line">    protocol = TBinaryProtocol.TBinaryProtocol(transport)</span><br><span class="line">    client = THBaseService.Client(protocol)</span><br><span class="line">    transport.open()</span><br><span class="line">    <span class="comment">#get</span></span><br><span class="line">    get = TGet(row=row, columns=coulumnValues)</span><br><span class="line">    result = client.get(tableName,get)</span><br><span class="line">    <span class="keyword">print</span>  result</span><br></pre></td></tr></table></figure>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>1、找不到libboost_unit_test_framework.a</p>
+<p>使用源码本地编译 boos t安装；由于默认认为是 32 位，在 <code>/usr/lib64/libboost_unit_test_framework.a</code> 下是找不到的。可以通过 <code>find libboost_unit_test_framework.a</code> 定位文件真实路径，进行创建软连接。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find / -name libboost_unit_test_framework.a</span><br><span class="line">ln -s /usr/local/lib/libboost_unit_test_framework.a /usr/lib64/libboost_unit_test_framework.a</span><br></pre></td></tr></table></figure>
+<p>2、kerberos.GSSError: ((‘ Miscellaneous failure (see text)’, 851968), (‘Error from KDC: UNKNOWN_SERVER’, -1765328377))</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 日志信息</span><br><span class="line">2019-05-08 20:36:10,529 WARN  [qtp176041373-47] http.HttpParser: Illegal character 0x1 in state=START for buffer HeapByteBuffer@28800d32[p=1,l=11,c=8192,r=10]=&#123;\x01&lt;&lt;&lt;\x00\x00\x00\x06GSSAPI&gt;&gt;&gt;\x02\x00\x00\x03P`\x82\x03L\x06\t*\x86H\x86\xF7\x12...\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00&#125;</span><br><span class="line">2019-05-08 20:36:10,530 WARN  [qtp176041373-47] http.HttpParser: bad HTTP parsed: 400 Illegal character 0x1 for HttpChannelOverHttp@24c343ea&#123;r=0,c=false,a=IDLE,uri=null&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">thriftServer = &quot;10.200.168.7&quot;</span><br><span class="line">改为</span><br><span class="line">thriftServer = &quot;dev-dmp5.fengdai.org&quot;</span><br><span class="line">应该跟hbase/localhost@EXAMPLE.COM =&gt; hbase/dev-dmp5.fengdai.org@DEVDIP.ORG</span><br></pre></td></tr></table></figure>
+<p>3、thrift.transport.TTransport.TTransportException: TSocket read 0 bytes</p>
+<p>访问其实已经是通了，一直以为是客户端的问题，由于代码是通过 binary 方式访问，<code>hbase.regionserver.thrift.http=false</code> 应该设置为 false。</p>
+<p>4、out 日志中查看到错误信息是认证的问题？</p>
+<p><code>hbase.thrift.kerberos.principal</code> 肯定是配置错误了</p>
+<h2 id="高级拓展"><a href="#高级拓展" class="headerlink" title="高级拓展"></a>高级拓展</h2><h3 id="启动方式选择"><a href="#启动方式选择" class="headerlink" title="启动方式选择"></a>启动方式选择</h3><p>Thrift服务启动有两种方式： </p>
+<ol>
+<li>每个节点上启动thrift服务</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/hbase-daemon.sh start thrift</span><br></pre></td></tr></table></figure>
+<ol>
+<li>仅在Master上启动线程池服务</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/hbase thrift start -threadpool</span><br></pre></td></tr></table></figure>
+<p>由于系统Hbase集群节点数很多，第二种方式更简单些</p>
+<h3 id="优化配置项"><a href="#优化配置项" class="headerlink" title="优化配置项"></a>优化配置项</h3><p><code>Hbase-site.xml</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.regionserver.handler.count<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>400<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.thrift.minWorkerThreads<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>1000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.thrift.maxWorkerThreads<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>2000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.thrift.server.socket.read.timeout<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">value</span>&gt;</span>6000000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">description</span>&gt;</span>eg:milisecond<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.regionserver.thrift.maxreadlength<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">value</span>&gt;</span>0<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">description</span>&gt;</span>0:not check data length<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h2><ul>
+<li><a href="https://yq.aliyun.com/articles/335976" target="_blank" rel="noopener">HBase ThriftServer Kerberos认证</a></li>
+<li><a href="https://acadgild.com/blog/connecting-hbase-with-python-application-using-thrift-server" target="_blank" rel="noopener">Connecting HBase with Python Application using Thrift Server</a></li>
+<li><a href="http://www.voidcn.com/article/p-eyhhmnon-bpk.html" target="_blank" rel="noopener">Python Access Secured Hadoop Cluster Through Thrift API - 程序园</a></li>
+<li><a href="http://shzhangji.com/cnblogs/2018/04/22/connect-hbase-with-python-and-thrift/" target="_blank" rel="noopener">使用 Python 和 Thrift 连接 HBase | 张吉的博客</a></li>
+<li><a href="https://community.hortonworks.com/articles/87655/start-and-test-hbase-thrift-server-in-a-kerberised.html" target="_blank" rel="noopener">hbase-thrift-server-in-a-kerberised.html</a></li>
+<li><a href="https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.4.3/bk_installing_manually_book/content/ref-2a6efe32-d0e1-4e84-9068-4361b8c36dc8.1.html" target="_blank" rel="noopener">Start the HBase Thrift and REST Servers - Hortonworks Data Platform</a></li>
+<li><a href="https://github.com/yxfff/HBase-Thrift-Kerberos/blob/master/thrift/thrift1_hbase.py" target="_blank" rel="noopener">Python HBase Kerberos Example</a> </li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/weixin.jpg" alt="迹_Jason wechat" style="width: 200px; max-width: 100%;"/>
+    <div>分享快乐，感受科技的温度</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/pay.jpg" alt="迹_Jason 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/01/记一次 Git 管理经历20190401/" rel="next" title="记一次 Git 管理经历">
+                <i class="fa fa-chevron-left"></i> 记一次 Git 管理经历
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/1.jpg"
+                alt="迹_Jason" />
+            
+              <p class="site-author-name" itemprop="name">迹_Jason</p>
+              <p class="site-description motion-element" itemprop="description">分享快乐，感受科技的温度</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">45</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zoeminghong" target="_blank" title="github" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>github</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/jasongoo123/home?wvr=5" target="_blank" title="weibo" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>weibo</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HBase-Thrift-with-Python"><span class="nav-number">1.</span> <span class="nav-text">HBase Thrift with Python</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Thrift"><span class="nav-number">1.1.</span> <span class="nav-text">安装 Thrift</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装依赖包"><span class="nav-number">1.1.1.</span> <span class="nav-text">安装依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-boost-CentOS-7-必做"><span class="nav-number">1.1.2.</span> <span class="nav-text">安装 boost (CentOS 7 必做)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载-Thrift"><span class="nav-number">1.1.3.</span> <span class="nav-text">下载 Thrift</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动-Thrift-服务"><span class="nav-number">1.1.4.</span> <span class="nav-text">启动 Thrift 服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-方式连接"><span class="nav-number">1.1.5.</span> <span class="nav-text">Python 方式连接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Thrift-1-模式"><span class="nav-number">1.1.5.1.</span> <span class="nav-text">Thrift_1 模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Thrift-2-模式"><span class="nav-number">1.1.5.2.</span> <span class="nav-text">Thrift_2 模式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kerberos-On-Thrift"><span class="nav-number">1.2.</span> <span class="nav-text">Kerberos On Thrift</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#服务配置"><span class="nav-number">1.2.1.</span> <span class="nav-text">服务配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重启-Thrift-服务"><span class="nav-number">1.2.2.</span> <span class="nav-text">重启 Thrift 服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-方式连接-1"><span class="nav-number">1.2.3.</span> <span class="nav-text">Python 方式连接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Thrift-1-模式-1"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">Thrift_1 模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Thrift-2-模式-1"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">Thrift_2 模式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">1.3.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高级拓展"><span class="nav-number">1.4.</span> <span class="nav-text">高级拓展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#启动方式选择"><span class="nav-number">1.4.1.</span> <span class="nav-text">启动方式选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化配置项"><span class="nav-number">1.4.2.</span> <span class="nav-text">优化配置项</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关文章"><span class="nav-number">1.5.</span> <span class="nav-text">相关文章</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">迹_Jason</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" rel="external nofollow" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.0.6</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.6"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.6"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.6"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.6"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.6"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://zerostech.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://zoeminghong.github.io/2019/05/08/hbase_thrift/';
+        this.page.identifier = '2019/05/08/hbase_thrift/';
+        this.page.title = '';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://zerostech.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        $(function () {
+          var offsetTop = $('#comments').offset().top - $(window).height();
+          if (offsetTop <= 0) {
+            // load directly when there's no a scrollbar
+            loadComments();
+          } else {
+            $(window).on('scroll.disqus_scroll', function () {
+              var scrollTop = document.documentElement.scrollTop;
+              if (scrollTop >= offsetTop) {
+                $(window).off('.disqus_scroll');
+                loadComments();
+              }
+            });
+          }
+        });
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

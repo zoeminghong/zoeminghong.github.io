@@ -99,21 +99,21 @@
 
 
 
-  <meta name="description" content="说在文前 本文内容是基于 Centos 7、HDP 3.0.0、HBase 2.0.0、Python 2.7 环境下，其他环境的童鞋选择性进行参考。 Thrift 安装在 HBase 服务节点上即可。 HBase 实现了两套Thrift Server服务，有两种 Thrift IDL 文件，提供了两套数据结构:  第一套有 TCell， ColumnDescriptor，TRegionInfo 等">
+  <meta name="description" content="说在文前 本文内容是基于 Centos 7、HDP 3.0.0、HBase 2.0.0、Python 2.7 环境下，其他环境的童鞋选择性进行参考。 Thrift 安装在 HBase 服务节点上即可。">
 <meta name="keywords" content="code">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HBase Thrift with Python">
 <meta property="og:url" content="http://zoeminghong.github.io/2019/05/19/hbase_thrift/index.html">
 <meta property="og:site_name" content="AppZone">
-<meta property="og:description" content="说在文前 本文内容是基于 Centos 7、HDP 3.0.0、HBase 2.0.0、Python 2.7 环境下，其他环境的童鞋选择性进行参考。 Thrift 安装在 HBase 服务节点上即可。 HBase 实现了两套Thrift Server服务，有两种 Thrift IDL 文件，提供了两套数据结构:  第一套有 TCell， ColumnDescriptor，TRegionInfo 等">
+<meta property="og:description" content="说在文前 本文内容是基于 Centos 7、HDP 3.0.0、HBase 2.0.0、Python 2.7 环境下，其他环境的童鞋选择性进行参考。 Thrift 安装在 HBase 服务节点上即可。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://zoeminghong.github.io/2019/05/19/hbase_thrift/image-20190509111551665.png">
 <meta property="og:image" content="http://zoeminghong.github.io/2019/05/19/hbase_thrift/image-20190508180631438.png?lastModify=1557320005">
 <meta property="og:image" content="http://zoeminghong.github.io/2019/05/19/hbase_thrift/image-20190508181026068.png?lastModify=1557320005">
-<meta property="og:updated_time" content="2019-05-23T07:29:59.971Z">
+<meta property="og:updated_time" content="2019-05-23T07:33:28.594Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HBase Thrift with Python">
-<meta name="twitter:description" content="说在文前 本文内容是基于 Centos 7、HDP 3.0.0、HBase 2.0.0、Python 2.7 环境下，其他环境的童鞋选择性进行参考。 Thrift 安装在 HBase 服务节点上即可。 HBase 实现了两套Thrift Server服务，有两种 Thrift IDL 文件，提供了两套数据结构:  第一套有 TCell， ColumnDescriptor，TRegionInfo 等">
+<meta name="twitter:description" content="说在文前 本文内容是基于 Centos 7、HDP 3.0.0、HBase 2.0.0、Python 2.7 环境下，其他环境的童鞋选择性进行参考。 Thrift 安装在 HBase 服务节点上即可。">
 <meta name="twitter:image" content="http://zoeminghong.github.io/2019/05/19/hbase_thrift/image-20190509111551665.png">
 
 
@@ -417,12 +417,12 @@
         <p><strong>说在文前</strong></p>
 <p>本文内容是基于 <code>Centos 7、HDP 3.0.0、HBase 2.0.0、Python 2.7</code> 环境下，其他环境的童鞋选择性进行参考。</p>
 <p>Thrift 安装在 HBase 服务节点上即可。</p>
+<a id="more"></a>
 <p>HBase 实现了两套Thrift Server服务，有两种 Thrift IDL 文件，提供了两套数据结构:</p>
 <ul>
 <li>第一套有 TCell， ColumnDescriptor，TRegionInfo 等，它的 API 比较全，它不仅有读写 API，同时也有创建删除等 API；</li>
 <li>第二套有 TTimeRange, TColumn, TColumnValue 等，它更加接近 HBase Java API 的调用方式，但是它的 API 比较少，只有读写表的API），它们最后都是通过 HBase Client 的 Java  API 来完成操作。</li>
 </ul>
-<a id="more"></a>
 <h2 id="安装-Thrift"><a href="#安装-Thrift" class="headerlink" title="安装 Thrift"></a>安装 Thrift</h2><h3 id="安装依赖包"><a href="#安装依赖包" class="headerlink" title="安装依赖包"></a>安装依赖包</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y automake libtool flex bison pkgconfig gcc-c++ libevent-devel zlib-devel python-devel ruby-devel openssl-devel</span><br></pre></td></tr></table></figure>
 <h3 id="安装-boost-CentOS-7-必做"><a href="#安装-boost-CentOS-7-必做" class="headerlink" title="安装 boost (CentOS 7 必做)"></a>安装 boost (CentOS 7 必做)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://dl.bintray.com/boostorg/release/1.64.0/source/boost_1_64_0.tar.gz</span><br><span class="line">tar zxvf boost_1_64_0.tar.gz</span><br><span class="line">cd boost_1_64_0</span><br><span class="line">./bootstrap.sh</span><br><span class="line">./b2 install</span><br></pre></td></tr></table></figure>
 <h3 id="下载-Thrift"><a href="#下载-Thrift" class="headerlink" title="下载 Thrift"></a>下载 Thrift</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wget https://archive.apache.org/dist/thrift/0.10.0/thrift-0.10.0.tar.gz</span><br><span class="line">tar zxvf thrift-0.10.0.tar.gz</span><br><span class="line">cd thrift-0.10.0/</span><br><span class="line">./configure  或者 ./configure --with-boost=/usr/local  --without-java --without-php</span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line"># 进行确认安装成功</span><br><span class="line">thrift -help</span><br></pre></td></tr></table></figure>
@@ -492,6 +492,7 @@
 <li><a href="https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.4.3/bk_installing_manually_book/content/ref-2a6efe32-d0e1-4e84-9068-4361b8c36dc8.1.html" target="_blank" rel="noopener">Start the HBase Thrift and REST Servers - Hortonworks Data Platform</a></li>
 <li><a href="https://github.com/yxfff/HBase-Thrift-Kerberos/blob/master/thrift/thrift1_hbase.py" target="_blank" rel="noopener">Python HBase Kerberos Example</a> </li>
 </ul>
+<p>我的博客即将同步至腾讯云+社区，邀请大家一同入驻：<a href="https://cloud.tencent.com/developer/support-plan?invite_code=u3ne6vwvzcx2" target="_blank" rel="noopener">https://cloud.tencent.com/developer/support-plan?invite_code=u3ne6vwvzcx2</a></p>
 
       
     </div>

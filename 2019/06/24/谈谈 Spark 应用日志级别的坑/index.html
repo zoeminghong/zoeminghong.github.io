@@ -99,31 +99,25 @@
 
 
 
-  <meta name="description" content="从大学开始我就希望能有一个自己的个人网站，觉得那样真的很酷，就自学了HTML和Java编程，从此踏上了码农搬砖的不归路。。。。现如今，建一个网站的成本真的是太低了，特别是有了GitHub以后，不懂代码的孩子都可以自己建站了。好，废话就放到最后说。">
+  <meta name="description" content="环境说明：HDP 3.0 + Kerberos + Livy  根据 Spark 官方文档的指引，清楚的知道存在三种方式可以对应用的日志级别进行调整。">
 <meta name="keywords" content="code">
 <meta property="og:type" content="article">
-<meta property="og:title" content="教你如何建高逼格个人网站">
-<meta property="og:url" content="http://zoeminghong.github.io/2016/04/20/octopress/index.html">
+<meta property="og:title" content="谈谈 Spark 应用日志级别的坑">
+<meta property="og:url" content="http://zoeminghong.github.io/2019/06/24/谈谈 Spark 应用日志级别的坑/index.html">
 <meta property="og:site_name" content="AppZone">
-<meta property="og:description" content="从大学开始我就希望能有一个自己的个人网站，觉得那样真的很酷，就自学了HTML和Java编程，从此踏上了码农搬砖的不归路。。。。现如今，建一个网站的成本真的是太低了，特别是有了GitHub以后，不懂代码的孩子都可以自己建站了。好，废话就放到最后说。">
+<meta property="og:description" content="环境说明：HDP 3.0 + Kerberos + Livy  根据 Spark 官方文档的指引，清楚的知道存在三种方式可以对应用的日志级别进行调整。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://img.blog.csdn.net/20160420182107897">
-<meta property="og:image" content="http://img.blog.csdn.net/20160420182427932">
-<meta property="og:image" content="http://img.blog.csdn.net/20160420182629700">
-<meta property="og:image" content="http://img.blog.csdn.net/20160420182713024">
-<meta property="og:image" content="http://img.blog.csdn.net/20160420183249933">
-<meta property="og:updated_time" content="2017-06-20T10:58:47.000Z">
+<meta property="og:updated_time" content="2019-06-24T13:45:56.320Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="教你如何建高逼格个人网站">
-<meta name="twitter:description" content="从大学开始我就希望能有一个自己的个人网站，觉得那样真的很酷，就自学了HTML和Java编程，从此踏上了码农搬砖的不归路。。。。现如今，建一个网站的成本真的是太低了，特别是有了GitHub以后，不懂代码的孩子都可以自己建站了。好，废话就放到最后说。">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20160420182107897">
+<meta name="twitter:title" content="谈谈 Spark 应用日志级别的坑">
+<meta name="twitter:description" content="环境说明：HDP 3.0 + Kerberos + Livy  根据 Spark 官方文档的指引，清楚的知道存在三种方式可以对应用的日志级别进行调整。">
 
 
 
 
 
 
-  <link rel="canonical" href="http://zoeminghong.github.io/2016/04/20/octopress/"/>
+  <link rel="canonical" href="http://zoeminghong.github.io/2019/06/24/谈谈 Spark 应用日志级别的坑/"/>
 
 
 
@@ -133,7 +127,7 @@
   };
 </script>
 
-  <title>教你如何建高逼格个人网站 | AppZone</title>
+  <title>谈谈 Spark 应用日志级别的坑 | AppZone</title>
   
 
 
@@ -339,7 +333,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2016/04/20/octopress/">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2019/06/24/谈谈 Spark 应用日志级别的坑/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="迹_Jason">
@@ -356,7 +350,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">教你如何建高逼格个人网站</h2>
+          <h2 class="post-title" itemprop="name headline">谈谈 Spark 应用日志级别的坑</h2>
         
 
         <div class="post-meta">
@@ -368,7 +362,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-20T00:00:00+08:00">2016-04-20</time>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-24T00:00:00+08:00">2019-06-24</time>
             
 
             
@@ -386,9 +380,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/04/20/octopress/#comments" itemprop="discussionUrl">
+                <a href="/2019/06/24/谈谈 Spark 应用日志级别的坑/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2016/04/20/octopress/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2019/06/24/谈谈 Spark 应用日志级别的坑/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -417,70 +411,53 @@
 
       
         <blockquote>
-<p>从大学开始我就希望能有一个自己的个人网站，觉得那样真的很酷，就自学了HTML和Java编程，从此踏上了码农搬砖的不归路。。。。现如今，建一个网站的成本真的是太低了，特别是有了GitHub以后，不懂代码的孩子都可以自己建站了。好，废话就放到最后说。</p>
+<p>环境说明：HDP 3.0 + Kerberos + Livy</p>
 </blockquote>
+<p>根据 <a href="http://spark.apache.org/docs/latest/running-on-yarn.html#debugging-your-application" target="_blank" rel="noopener">Spark</a> 官方文档的指引，清楚的知道存在三种方式可以对应用的日志级别进行调整。</p>
 <a id="more"></a>
-<h3 id="一、Git安装配置"><a href="#一、Git安装配置" class="headerlink" title="一、Git安装配置"></a>一、Git安装配置</h3><p>1、安装Git软件</p>
-<p>2、在Github上注册一个帐号</p>
-<p>  地址：<a href="www.github.com">Github</a></p>
-<p>3、在桌面打开Git，进行设置</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name "username"//github的帐号名</span><br><span class="line">git config --global user.email "username@163.com"//github的邮箱地址</span><br></pre></td></tr></table></figure>
-<p>4、生成ssh密钥</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C "username@163.com"//github邮箱地址</span><br></pre></td></tr></table></figure>
-<p>接着会提醒你输入名字和密码，可以为空<br><strong>会在C盘的该电脑用户下面生成一个.ssh文件，其中的id_rsa和id_rsa.pub，id_rsa要好好保存，id_rsa.pub用来在github网站做配置用</strong></p>
-<p>5、配置github</p>
-<p><img src="http://img.blog.csdn.net/20160420182107897" alt="github设置"></p>
-<p>使用Add SSH key，tittle可以随意输，将id_rsa.pub中的密钥保存到这里<br>设置完成后，可以在本地输入</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-<p>其会将github中的公钥与本地的私钥进行匹配，成功则会返回成功信息</p>
-<p><img src="http://img.blog.csdn.net/20160420182427932" alt="成功返回"></p>
-<h3 id="二、安装Ruby"><a href="#二、安装Ruby" class="headerlink" title="二、安装Ruby"></a>二、安装Ruby</h3><p>1、在安装Ruby时一定要勾选Add RubyExcutables to your Path，否则自己要配置环境变量<br>2、查看是否安装成功</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruby -v</span><br></pre></td></tr></table></figure>
-<h3 id="三、安装devkit"><a href="#三、安装devkit" class="headerlink" title="三、安装devkit"></a>三、安装devkit</h3><h3 id="四、将Ruby与devkit关联起来"><a href="#四、将Ruby与devkit关联起来" class="headerlink" title="四、将Ruby与devkit关联起来"></a>四、将Ruby与devkit关联起来</h3><p>1、在devkit安装目录下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruby dk.rb init</span><br></pre></td></tr></table></figure>
-<p><img src="http://img.blog.csdn.net/20160420182629700" alt="inti返回"></p>
-<p>会生成一个config.yml<br>成功的情况下在该文件下面会有一行是关于ruby的安装路径的数据<br>如果失败也没事，只要通过手动输入就行了</p>
-<p><img src="http://img.blog.csdn.net/20160420182713024" alt="修改"></p>
-<p>2、在devkit安装目录下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruby dk.rb install</span><br></pre></td></tr></table></figure>
-<h3 id="五、安装配置octopress"><a href="#五、安装配置octopress" class="headerlink" title="五、安装配置octopress"></a>五、安装配置octopress</h3><p>1、克隆octopress，切换到自己要安装的文件下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone git://github.com/imathis/octopress.git octopress</span><br></pre></td></tr></table></figure>
-<p>2、在octopress的文件根目录下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gen sources -a http://gems.ruby-china.org/</span><br></pre></td></tr></table></figure>
-<p>一个国内的软件源<br>移除自带的软件源，因为在国内会被墙</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gem sources -r http://rubygems.org</span><br></pre></td></tr></table></figure>
-<p>查看软件源</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gem sources -l</span><br></pre></td></tr></table></figure>
-<p>3、修改octopress文件下面的Gemfile文件中的source地址，也改为<strong><a href="http://gems.ruby-china.org/" target="_blank" rel="noopener">http://gems.ruby-china.org/</a></strong><br>如果上面的命令存在执行错误，可以使用windows自带的CMD命令行去执行</p>
-<p>4、在octopress下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gem install bundle</span><br></pre></td></tr></table></figure>
-<p>过程有点长，会有successful<br>接着执行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bundle install</span><br></pre></td></tr></table></figure>
-<p>过程有点长<br>最后</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rake install</span><br></pre></td></tr></table></figure>
-<p>会生成source和public文件，source是源代码的文件，而public是生成的文件</p>
-<p>5、编译octopress</p>
-<p>在octopress文件下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rake generator</span><br></pre></td></tr></table></figure>
-<p>该指令会编译修改的内容，生成好的文件会在public文件下</p>
-<p>6、运行</p>
-<p>在octopress文件下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rake preview</span><br></pre></td></tr></table></figure>
-<p>会使用4000端口，开一个服务<br>使用localhost:4000访问</p>
-<h3 id="六、部署到Github网站上去"><a href="#六、部署到Github网站上去" class="headerlink" title="六、部署到Github网站上去"></a>六、部署到Github网站上去</h3><p>1、在Github中创建一个username.github.io的仓库，username为用户自己的Github帐号名</p>
-<p>2、在octopress文件下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rake setup_github_pages</span><br></pre></td></tr></table></figure>
-<p>会提示你输入github中的git地址</p>
-<p><img src="http://img.blog.csdn.net/20160420183249933" alt="github地址"></p>
-<p>会创建_deploy文件，并且跟Github绑定好了<br>如果上面的指令不起作用，可以使用下面的方式   </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rake setup_github_pages[github中username.github.io仓库的ssh地址]</span><br></pre></td></tr></table></figure>
-<p>3、使用rake generator</p>
-<p>4、使用rake deploy，将本地编译好的文件上传到Github中</p>
-<h3 id="七、将source目录代码上传到Github分支"><a href="#七、将source目录代码上传到Github分支" class="headerlink" title="七、将source目录代码上传到Github分支"></a>七、将source目录代码上传到Github分支</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m 'your message'//注释</span><br><span class="line">git push origin source</span><br></pre></td></tr></table></figure>
-<h4 id="相关软件下载地址：软件"><a href="#相关软件下载地址：软件" class="headerlink" title=" 相关软件下载地址：软件 "></a><strong> 相关软件下载地址：<a href="http://pan.baidu.com/s/1geYwwb5" target="_blank" rel="noopener">软件</a> </strong></h4><h4 id="学习网站：jekyll"><a href="#学习网站：jekyll" class="headerlink" title=" 学习网站：jekyll"></a><strong> 学习网站：</strong><a href="http://jekyll.bootcss.com/docs/installation/" target="_blank" rel="noopener">jekyll</a></h4><ul>
-<li>以上です(Ending)</li>
-<li>ありがどう(Thank You)</li>
+<ul>
+<li>upload a custom <code>log4j.properties</code> using <code>spark-submit</code>, by adding it to the <code>--files</code> list of files to be uploaded with the application.</li>
+<li>add <code>-Dlog4j.configuration=&lt;location of configuration file&gt;</code> to <code>spark.driver.extraJavaOptions</code> (for the driver) or <code>spark.executor.extraJavaOptions</code> (for executors). Note that if using a file, the <code>file:</code> protocol should be explicitly provided, and the file needs to exist locally on all the nodes.</li>
+<li>update the <code>$SPARK_CONF_DIR/log4j.properties</code> file and it will be automatically uploaded along with the other configurations. Note that other 2 options has higher priority than this option if multiple options are specified.</li>
 </ul>
+<p>第三种方案是我们最不希望看到的选择，因而选择了第一、二两种进行尝试。</p>
+<h2 id="第一种方案"><a href="#第一种方案" class="headerlink" title="第一种方案"></a>第一种方案</h2><p><strong>过程：</strong></p>
+<ol>
+<li>将编辑准备好的 <code>log4j-error.properties</code> 文件上传到 HDFS</li>
+<li>授予接下来启动 Spark 应用的用户读取权限</li>
+<li>启动参数中，添加 <code>&quot;files&quot;:[&quot;/logfile/log4j-error.properties&quot;]</code>  参数，来指定 <code>log4j.properties</code> 文件路径。</li>
+<li>启动参数中，添加 <code>&quot;spark.driver.extraJavaOptions&quot;: &quot;-Dlog4j.configuration=log4j-error.properties&quot;,&quot;spark.executor.extraJavaOptions&quot;: &quot;-Dlog4j.configuration=log4j-error.properties&quot;</code> ，相对路径即可</li>
+<li>使用 <a href="https://livy.apache.org/docs/latest/rest-api.html" target="_blank" rel="noopener">Livy</a> 进行启动应用</li>
+</ol>
+<p><strong>这里的可能遇到的问题：</strong></p>
+<ul>
+<li><code>-files</code> 参数是数组，不是简单的 String</li>
+<li><code>spark.driver.extraJavaOptions</code> 用于 Driver 的日志级别文件的指定，<code>&quot;spark.executor.extraJavaOptions</code> 用于 Executor 的日志级别文件的指定。可以单独分别指定，支持相对路径。</li>
+<li>HDFS 下文件的权限一定要注意</li>
+</ul>
+<h2 id="第二种方案"><a href="#第二种方案" class="headerlink" title="第二种方案"></a>第二种方案</h2><p><strong>过程：</strong></p>
+<ol>
+<li>将编辑准备好的 <code>log4j-error.properties</code> 文件上传到 <code>Spark Server</code> 所在服务器的 <code>$SPARK_CONF_DIR/</code> 目录下</li>
+<li>授予  <code>log4j-error.properties</code> 文件读取权限，粗暴一点直接设置为 777</li>
+<li>启动参数中，添加 <code>&quot;spark.driver.extraJavaOptions&quot;: &quot;-Dlog4j.configuration=log4j-error.properties&quot;,&quot;spark.executor.extraJavaOptions&quot;: &quot;-Dlog4j.configuration=log4j-error.properties&quot;</code> ，如果相对路径不生效，可以使用绝对路径( <code>file:/spark/conf/log4j-error.properties</code> )</li>
+<li>使用 <a href="https://livy.apache.org/docs/latest/rest-api.html" target="_blank" rel="noopener">Livy</a> 进行启动应用</li>
+</ol>
+<p><strong>这里的可能遇到的问题：</strong></p>
+<ul>
+<li>读取的权限，一定要启动应用的用户拥有权限</li>
+<li>所有 Spark 节点下都要有日志文件哦</li>
+</ul>
+<h2 id="第三种方案"><a href="#第三种方案" class="headerlink" title="第三种方案"></a>第三种方案</h2><p><strong>过程：</strong></p>
+<ol>
+<li>在 <code>HDP Ambari</code>页面 Spark 下，对日志配置进行相应的修改</li>
+<li>重启 Spark 服务使其生效</li>
+</ol>
+<p><strong>这里的可能遇到的问题：</strong></p>
+<ul>
+<li>优先级该方案是三者中最低的，前两种都可以覆盖该种方案</li>
+</ul>
+<h2 id="谈谈-log4j-配置"><a href="#谈谈-log4j-配置" class="headerlink" title="谈谈 log4j 配置"></a>谈谈 <code>log4j</code> 配置</h2><h3 id="自定义某路径下的日志级别"><a href="#自定义某路径下的日志级别" class="headerlink" title="自定义某路径下的日志级别"></a>自定义某路径下的日志级别</h3><p>比如：希望 <code>com.zerostech.demo</code> 路径下日志级别为 ERROR</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">log4j.logger.com.zerostech.demo=ERROR</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -546,8 +523,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/04/20/fist/" rel="next" title="超越sublime的Visual Studio Code">
-                <i class="fa fa-chevron-left"></i> 超越sublime的Visual Studio Code
+              <a href="/2019/05/19/hbase_thrift/" rel="next" title="HBase Thrift with Python">
+                <i class="fa fa-chevron-left"></i> HBase Thrift with Python
               </a>
             
           </div>
@@ -555,10 +532,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/05/05/pom20160505/" rel="prev" title="Maven的pom文件那些事">
-                Maven的pom文件那些事 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -719,7 +692,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、Git安装配置"><span class="nav-number">1.</span> <span class="nav-text">一、Git安装配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、安装Ruby"><span class="nav-number">2.</span> <span class="nav-text">二、安装Ruby</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、安装devkit"><span class="nav-number">3.</span> <span class="nav-text">三、安装devkit</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、将Ruby与devkit关联起来"><span class="nav-number">4.</span> <span class="nav-text">四、将Ruby与devkit关联起来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、安装配置octopress"><span class="nav-number">5.</span> <span class="nav-text">五、安装配置octopress</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、部署到Github网站上去"><span class="nav-number">6.</span> <span class="nav-text">六、部署到Github网站上去</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、将source目录代码上传到Github分支"><span class="nav-number">7.</span> <span class="nav-text">七、将source目录代码上传到Github分支</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#相关软件下载地址：软件"><span class="nav-number">7.1.</span> <span class="nav-text"> 相关软件下载地址：软件 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#学习网站：jekyll"><span class="nav-number">7.2.</span> <span class="nav-text"> 学习网站：jekyll</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一种方案"><span class="nav-number">1.</span> <span class="nav-text">第一种方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二种方案"><span class="nav-number">2.</span> <span class="nav-text">第二种方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三种方案"><span class="nav-number">3.</span> <span class="nav-text">第三种方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#谈谈-log4j-配置"><span class="nav-number">4.</span> <span class="nav-text">谈谈 log4j 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义某路径下的日志级别"><span class="nav-number">4.1.</span> <span class="nav-text">自定义某路径下的日志级别</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -875,9 +848,9 @@
   
     <script type="text/javascript">
       var disqus_config = function () {
-        this.page.url = 'http://zoeminghong.github.io/2016/04/20/octopress/';
-        this.page.identifier = '2016/04/20/octopress/';
-        this.page.title = '教你如何建高逼格个人网站';
+        this.page.url = 'http://zoeminghong.github.io/2019/06/24/谈谈 Spark 应用日志级别的坑/';
+        this.page.identifier = '2019/06/24/谈谈 Spark 应用日志级别的坑/';
+        this.page.title = '谈谈 Spark 应用日志级别的坑';
       };
       function loadComments () {
         var d = document, s = d.createElement('script');

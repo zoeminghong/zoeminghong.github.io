@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.6" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=6.0.6">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.0.6">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.0.6">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=6.0.6" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.0.6',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="title:阿里巴巴大数据实践之数据仓库读书笔记tags:code date:2020-02-13名词说明业务板块定义数据仓库的名称和业务空间，以企业内一个相对独立的业务为分配单元。例如，如果业务涉及零售、文娱，且系统间相对独立，则需要构建两个业务板块，即零售、文娱。如果业务仅涉及零售，且业务内的系统间隔离较少，则只需要构建一个业务板块，即零售。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AppZone">
+<meta property="og:url" content="http://zoeminghong.github.io/2020/02/13/数据模型20200213/index.html">
+<meta property="og:site_name" content="AppZone">
+<meta property="og:description" content="title:阿里巴巴大数据实践之数据仓库读书笔记tags:code date:2020-02-13名词说明业务板块定义数据仓库的名称和业务空间，以企业内一个相对独立的业务为分配单元。例如，如果业务涉及零售、文娱，且系统间相对独立，则需要构建两个业务板块，即零售、文娱。如果业务仅涉及零售，且业务内的系统间隔离较少，则只需要构建一个业务板块，即零售。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybply1gbv3p74uenj30g905c0u6.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybply1gbv3psd13kj30g90eq43g.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybply1gbv3pwifxgj30gp0m2gt7.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybply1gbv3q4u1wij30g70an0vz.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybply1gbv3q9gedyj30ha08bdif.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybply1gbv3qcdsg6j30gc080di6.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybply1gbv3qfx9pnj307i0aftad.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybply1gbv3qkkce0j30g20j444c.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybply1gbv3qmmp8xj30g60giwkp.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybply1gbv3qvxzktj30ha0nzgn8.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/0082zybply1gbv3r2xoagj30ft097n06.jpg">
+<meta property="og:updated_time" content="2020-02-13T13:50:22.494Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AppZone">
+<meta name="twitter:description" content="title:阿里巴巴大数据实践之数据仓库读书笔记tags:code date:2020-02-13名词说明业务板块定义数据仓库的名称和业务空间，以企业内一个相对独立的业务为分配单元。例如，如果业务涉及零售、文娱，且系统间相对独立，则需要构建两个业务板块，即零售、文娱。如果业务仅涉及零售，且业务内的系统间隔离较少，则只需要构建一个业务板块，即零售。">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/0082zybply1gbv3p74uenj30g905c0u6.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="http://zoeminghong.github.io/2020/02/13/数据模型20200213/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title> | AppZone</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> 
+
+<div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">AppZone</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">分享快乐，感受科技的温度</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+          
+  <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      首页</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-spring-boot">
+    <a href="/tags/spring-boot" rel="section">
+      SpringBoot</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-spring-cloud">
+    <a href="/tags/spring-cloud" rel="section">
+      SpringCloud</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-code">
+    <a href="/tags/code" rel="section">
+      Sharing</a>
+</li>
+
+      
+        
+        
+          
+  <li class="menu-item menu-item-archives">
+    <a href="/archives" rel="section">
+      归档</a>
+</li>
+
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2020/02/13/数据模型20200213/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="迹_Jason">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZone">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline"></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-13T16:19:27+08:00">2020-02-13</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/02/13/数据模型20200213/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2020/02/13/数据模型20200213/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<p>title:阿里巴巴大数据实践之数据仓库读书笔记<br>tags:code</p>
+<h2 id="date-2020-02-13"><a href="#date-2020-02-13" class="headerlink" title="date:2020-02-13"></a>date:2020-02-13</h2><h2 id="名词说明"><a href="#名词说明" class="headerlink" title="名词说明"></a>名词说明</h2><h3 id="业务板块"><a href="#业务板块" class="headerlink" title="业务板块"></a>业务板块</h3><p>定义数据仓库的名称和业务空间，以企业内一个<strong>相对独立的业务</strong>为分配单元。例如，如果业务涉及零售、文娱，且系统间<strong>相对独立</strong>，则需要构建两个业务板块，即零售、文娱。如果业务仅涉及零售，且业务内的系统间隔离较少，则只需要构建一个业务板块，即零售。</p>
+<a id="more"></a>
+<h3 id="公共定义"><a href="#公共定义" class="headerlink" title="公共定义"></a>公共定义</h3><p>定义企业构建数据所需的全局概念对象或参数，以<strong>保证全局概念统一</strong>。当定义完成后，系统内其他指标（例如派生指标）可以按需统一、通用化引用这些对象，例如统计周期，年、月、日、每周、每日。</p>
+<h3 id="项目管理"><a href="#项目管理" class="headerlink" title="项目管理"></a>项目管理</h3><p>项目是一种<strong>物理空间上</strong>的划分。项目管理，即用户在数据中台建设过程中，对物理资源及开发人员进行隔离化管理。<strong>一个业务板块可以包含多个项目</strong>，每个系统成员可以加入多个不同的项目。</p>
+<h3 id="维度"><a href="#维度" class="headerlink" title="维度"></a>维度</h3><p>维度即<strong>进行统计的对象</strong>。通常情况下，维度是<strong>实际存在</strong>、不因事件发生就存在的实体。创建维度，即从顶层规范业务中的实体（主数据），并保证实体的唯一性。例如订单、商品。维度由多个属性组成的一个实体，例如买家维度，可以由买家支付金额、买家姓名、买家手机号之类的属性丰富维度这个实体。对于哪些使用较多却无法归属到相应的维度中的属性，归并到<strong>杂项维度</strong>中。</p>
+<p>维度在事实表中用于描述业务过程所处的环境信息。</p>
+<p>维度退化，是将一些维度信息直接存储到事实表中，冗余数据，方便读取数据。</p>
+<h3 id="业务过程"><a href="#业务过程" class="headerlink" title="业务过程"></a>业务过程</h3><p>业务过程即业务活动中的<strong>所有事件</strong>（它是一个事件集合）。创建业务过程，即从顶层规范业务中事务内容的类型及唯一性。因此业务过程是一个不可拆分的行为事件。例如下单、支付、退款都是业务过程。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybply1gbv3p74uenj30g905c0u6.jpg" alt="image-20200213165644682"></p>
+<p>淘宝交易订单的流转的业务过程有四个：创建订单、买家付款、卖家发货、买家确认收货。</p>
+<h3 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h3><p>指标分为原子指标和派生指标。<br>原子指标：对指标统计口径（即计算逻辑）、具体算法的一个抽象，是业务定义中不可再拆分的指标，例如支付金额。一般都为数值（统计）。<code>原子指标=业务过程（动作）+度量，</code>如支付（事件）金额（度量）。<br>派生指标：业务中常用的统计指标。派生指标=原子指标+业务限定+统计周期+统计粒度。例如，自然周、会员、采用优惠券支付的订单。</p>
+<h3 id="统计粒度"><a href="#统计粒度" class="headerlink" title="统计粒度"></a>统计粒度</h3><p>统计的最小颗粒度，数据唯一性的保证，统计分析的对象或视角，定义数据需要汇总的程度，可以理解为聚合运算时的分组条件（类似于SQL中group by的对象）。<strong>粒度是维度的一个组合，指明您的统计范围</strong>。例如，某个指标是某个卖家在某个省份的成交额，则粒度就是卖家、省份这两个维度的组合。 </p>
+<p>事实表中的一条记录所表达的业务细节程度被称为粒度。通常粒度可以通过两种方式来表述：一种是维度属性组合所表示的细节程度；一种是所表示的具体业务含义。</p>
+<h3 id="事实"><a href="#事实" class="headerlink" title="事实"></a>事实</h3><p>度量业务过程，一般为整型或浮点型的十进制数值。有可加性、半加性和不可加性三种类型。可加性事实是指可以按照与事实表关联的任意维度进行汇总。半可加性事实只能只能按照特定的维度汇总，能对所有维度汇总，比如库存可以按照地点和商品进行汇总，而按时间维度把一年中每个月的库存累加起来则毫无意义。还有一种度量完全不具备可加性，比如比率型事实。对于不可加性事实可分解为可加的事实来实现聚集。</p>
+<p>事实可以通过回答“过程的度量是什么”来确定。</p>
+<h4 id="事实的设计准则"><a href="#事实的设计准则" class="headerlink" title="事实的设计准则"></a>事实的设计准则</h4><ol>
+<li><p>事实完整性</p>
+<p>尽可能多地获取所有的度量。</p>
+</li>
+<li><p>事务一致性</p>
+<p>明确存储每一个事实以确保度量的一致性。</p>
+</li>
+<li><p>事实可加性</p>
+<p>遇到不可加性度量，比如分摊比例、利润率等，需要进行转化为可加性。</p>
+</li>
+</ol>
+<blockquote>
+<p>不可加性，就是两条记录中的值相加，是没有统计价值的，就可以认为是不可加的。</p>
+</blockquote>
+<h2 id="事实表"><a href="#事实表" class="headerlink" title="事实表"></a>事实表</h2><p>事实表紧紧围绕业务过程来设计，通过获取描述业务过程的度量来表达业务过程。</p>
+<p>事实表有三种类型：事务事实表、周期快照事实表和累计快照事实表。</p>
+<p><strong>事务事实表</strong>用来描述业务过程，跟踪空间或时间上某个点的度量事件，保存的是最原子的数据。</p>
+<p><strong>周期快照事实表</strong>以具有规律性的、可预见的时间间隔记录事实，时间间隔如每天、每月、每年等。</p>
+<p><strong>累积快照事实表</strong>用来表述过程开始和结束之间的关键步骤事件，覆盖过程的整个生命周期，通常具有多个日期字段来记录关键时间点。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>事务事实表</th>
+<th>周期快照对照事实表</th>
+<th>累积快照事实表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>时期/时间</td>
+<td>离散事务时间点</td>
+<td>以有规律的、可预测的间隔产生快照</td>
+<td>用于时间跨度不确定的不断变化的工作流</td>
+</tr>
+<tr>
+<td>日期维度</td>
+<td>事务日期</td>
+<td>快照日期</td>
+<td>相关业务过程涉及的多个日期</td>
+</tr>
+<tr>
+<td>业务过程数</td>
+<td>一个或多个</td>
+<td>一个？？？</td>
+<td>多个</td>
+</tr>
+<tr>
+<td>粒度</td>
+<td>每行代表实体的一个事务</td>
+<td>每行代表某时间周期的一个实体</td>
+<td>每行代表一个实体的生命周期</td>
+</tr>
+<tr>
+<td>事实</td>
+<td>事务事实</td>
+<td>累积事实</td>
+<td>相关业务过程事实和时间间隔事实</td>
+</tr>
+<tr>
+<td>事实表加载</td>
+<td>插入</td>
+<td>插入</td>
+<td>插入与更新</td>
+</tr>
+<tr>
+<td>事实表更新</td>
+<td>不更新</td>
+<td>不更新</td>
+<td>业务过程变更时更新</td>
+</tr>
+</tbody>
+</table>
+<h3 id="事实表设计原则"><a href="#事实表设计原则" class="headerlink" title="事实表设计原则"></a>事实表设计原则</h3><ul>
+<li>尽可能包含所有与业务过程相关的事实</li>
+<li>只选择与业务过程相关的事实</li>
+<li><strong>分解不可加性事实为可加的组件</strong></li>
+<li>在选择维度和事实之前必须先声明粒度</li>
+<li>在同一个事实表中不能有多种不同粒度的事实</li>
+<li>事实的单位要保持一致</li>
+<li><strong>对事实的 null 值要处理</strong></li>
+<li>使用退化维度提高事务表的易用性</li>
+</ul>
+<h3 id="事实表设计方法"><a href="#事实表设计方法" class="headerlink" title="事实表设计方法"></a>事实表设计方法</h3><ol>
+<li>选择业务过程及确定事实表类型</li>
+<li>声明粒度</li>
+<li>确定维度</li>
+<li>确定事实</li>
+<li>冗余维度</li>
+</ol>
+<h4 id="声明粒度"><a href="#声明粒度" class="headerlink" title="声明粒度"></a>声明粒度</h4><p>应该尽量选择最细级别的原子粒度，以确保事实表的应用具有最大的灵活性。</p>
+<p>确定了粒度，也就确定了主键。</p>
+<h4 id="确定事实"><a href="#确定事实" class="headerlink" title="确定事实"></a>确定事实</h4><p>尽可能包含所有与业务过程相关的事实。</p>
+<h4 id="冗余维度"><a href="#冗余维度" class="headerlink" title="冗余维度"></a>冗余维度</h4><p>正常建模时对维度的处理应该是单独存放在一张表中，通过主键与事实表进行关联。其目的是为了减少事实表的维度冗余，但有的时候，为了提高效率，进行适当将高频的维度信息冗余，方便下游用户使用。</p>
+<h3 id="事务事实表"><a href="#事务事实表" class="headerlink" title="事务事实表"></a>事务事实表</h3><h4 id="设计过程"><a href="#设计过程" class="headerlink" title="设计过程"></a>设计过程</h4><p>任何类型的时间都可以被理解为一种事务。</p>
+<p>事务事实表用以跟踪定义业务过程的个体行为，提供丰富的分析能力，作为数据仓库原子的明细数据。</p>
+<ol>
+<li>选择业务过程</li>
+<li>确定粒度</li>
+<li>确定维度</li>
+<li>确定事实</li>
+<li>冗余维度</li>
+</ol>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybply1gbv3psd13kj30g90eq43g.jpg" alt="image-20200213172555413"></p>
+<p>在确定维度的时候，对于无法归类的维度属性，可以合并到一个杂项维度进行存放。</p>
+<p>在事实表中，除了维度信息外的其他属性都是事实。事实一般为整型或浮点型的十进制数值。</p>
+<p>事务事实表主键为粒度。</p>
+<blockquote>
+<p>Kimball 维度建模理论认为，为了便于进行独立的分析研究，应该为每个业务过程建立一个事实表。</p>
+</blockquote>
+<p><strong>Q：每一个业务过程是否只能建一个事实表呢？</strong></p>
+<p>A：当然不是，一般我们建设事务事实表时，选用最小粒度作为粒度，增强其灵活性。除了事务事实表，还有其他两种类型的事实表。</p>
+<h4 id="事务事实表分类"><a href="#事务事实表分类" class="headerlink" title="事务事实表分类"></a>事务事实表分类</h4><p>事务事实表还分为两种：单事务事实表和多事务事实表。</p>
+<p>单事务事实表：针对每一个业务过程设计一个事实表。</p>
+<p>多事务事实表：将不同的事实放到同一个事实表中，即同一个事实表包含不同的业务过程。</p>
+<h5 id="多事务事实表"><a href="#多事务事实表" class="headerlink" title="多事务事实表"></a>多事务事实表</h5><p>多事务事实表使用场景一般为<strong>多个业务过程拥有相同的粒度。</strong></p>
+<p>多事务事实表设计时有两种方法进行事实的处理：</p>
+<ul>
+<li>不同业务过程的事实使用<strong>不同的事实字段</strong>进行存放</li>
+<li>不同业务过程的事实使用<strong>同一个事实字段</strong>进行存放</li>
+</ul>
+<blockquote>
+<p>当两个或多个业务过程<strong>事实结构比较相似</strong>的时候，选用同一个事实字段进行存放。</p>
+</blockquote>
+<p><strong>不同的事实字段</strong></p>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybply1gbv3pwifxgj30gp0m2gt7.jpg" alt="image-20200213182144330"></p>
+<p>如果不是当前业务过程的度量，则采取<strong>零值处理</strong>方式。</p>
+<p><strong>同一个事实字段</strong></p>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybply1gbv3q4u1wij30g70an0vz.jpg" alt="image-20200213182902307"></p>
+<h4 id="两种事务事实表如何选择"><a href="#两种事务事实表如何选择" class="headerlink" title="两种事务事实表如何选择"></a>两种事务事实表如何选择</h4><table>
+<thead>
+<tr>
+<th></th>
+<th>单事务事实表</th>
+<th>多事务事实表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>业务过程</td>
+<td>一个</td>
+<td>多个</td>
+</tr>
+<tr>
+<td>粒度</td>
+<td>相互间不相关</td>
+<td>相同粒度</td>
+</tr>
+<tr>
+<td>维度</td>
+<td>相互间不相关</td>
+<td>一致</td>
+</tr>
+<tr>
+<td>事实</td>
+<td>只取当前业务过程中的事实</td>
+<td>保留多个业务过程中的事实，非当前业务过程中的事实需要置零处理</td>
+</tr>
+<tr>
+<td>冗余维度</td>
+<td>多个业务过程，则需要冗余多次</td>
+<td>不同的业务过程只需冗余一次</td>
+</tr>
+<tr>
+<td>理解程度</td>
+<td>易于理解，不会混淆</td>
+<td>难以理解，需要通过标签来限定</td>
+</tr>
+<tr>
+<td>计算存储成本</td>
+<td>较多，每个业务过程都需要计算存储一次</td>
+<td>较少，不同业务过程融合到一起，降低了存储计算量，但是非当前业务过程的度量存在大量零值。</td>
+</tr>
+</tbody>
+</table>
+<p>建议：为了理解性和存储资源相对不紧张的情况下，尽可能选用单事务事实表，但若满足粒度和维度的要求情况下，可以考虑多事务事实表。</p>
+<h3 id="周期快照事实表"><a href="#周期快照事实表" class="headerlink" title="周期快照事实表"></a>周期快照事实表</h3><p>当需要一些 <strong>状态度量</strong> 时，比如账户余额、买卖家星级、商品库存等，则需要聚集于至相关的事务才能进行识别计算；或者聚集事务无法识别，比如温度等。对于这些状态度量，事务事实表是无效率的，而这些度量也和度量事务本身一样是有用的。</p>
+<h4 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h4><p>事务事实表的粒度能以多种方式表达，但快照事实表的粒度通常以维度形式声明；事务事实表是稀疏的，但快照事实表是稠密的；事务事实表中的事实是完全可加的，但快照模型将<strong>至少包含一个</strong>用来展示半可加性质的事实。</p>
+<h5 id="用快照采样状态"><a href="#用快照采样状态" class="headerlink" title="用快照采样状态"></a>用快照采样状态</h5><p>快照事实表以预定的间隔采样状态度量。这种间隔联合一个或多个维度，将被用来定义快照事实表的粒度。</p>
+<h5 id="快照粒度"><a href="#快照粒度" class="headerlink" title="快照粒度"></a>快照粒度</h5><p>快照事实表的粒度通常总是被多维声明，可以简单地理解为快照需要采样的周期以及什么将被采样。</p>
+<h5 id="密度与稀疏性"><a href="#密度与稀疏性" class="headerlink" title="密度与稀疏性"></a>密度与稀疏性</h5><p>快照事实表是稠密的，无论当天是否有业务过程发生，都会记录一行。</p>
+<h5 id="半可加性"><a href="#半可加性" class="headerlink" title="半可加性"></a>半可加性</h5><p>在快照事实表中收集到的状态都是半可加的。半可加性事实不能根据时间维度获得有意义的汇总结果。</p>
+<h4 id="快照事实表分类"><a href="#快照事实表分类" class="headerlink" title="快照事实表分类"></a>快照事实表分类</h4><h5 id="设计步骤"><a href="#设计步骤" class="headerlink" title="设计步骤"></a>设计步骤</h5><ol>
+<li>确定粒度</li>
+<li>确定状态度量</li>
+</ol>
+<h5 id="单维度的每天快照事实表"><a href="#单维度的每天快照事实表" class="headerlink" title="单维度的每天快照事实表"></a>单维度的每天快照事实表</h5><p>不同的采样粒度确定了不同的快照事实表。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybply1gbv3q9gedyj30ha08bdif.jpg" alt="image-20200213200726104"></p>
+<h5 id="混合维度的每天快照事实表"><a href="#混合维度的每天快照事实表" class="headerlink" title="混合维度的每天快照事实表"></a>混合维度的每天快照事实表</h5><p>混合维度相对于单维度，只是在每天的采样周期上针对多个维度进行采样。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybply1gbv3qcdsg6j30gc080di6.jpg" alt="image-20200213201014468"></p>
+<p>以上两类快照事实表都有一个特点：都可以从事务事实表中进行汇总产出。除此之外，还有一种产出模式，即直接使用操作型系统的数据作为周期快照事实表的数据加工，比如淘宝卖家星级。</p>
+<h5 id="全量快照事实表"><a href="#全量快照事实表" class="headerlink" title="全量快照事实表"></a>全量快照事实表</h5><p>全量快照事实表会增加冗余维度的操作。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybply1gbv3qfx9pnj307i0aftad.jpg" alt="image-20200213201451613"></p>
+<blockquote>
+<p>快照事实表与事务事实表往往都是成对设计的，相互补充，一瞒住更多的下游统计分析需求。</p>
+</blockquote>
+<h3 id="累计快照事实表"><a href="#累计快照事实表" class="headerlink" title="累计快照事实表"></a>累计快照事实表</h3><p>比如统计卖家下单到支付的时长、买家支付到卖家发货的时长等。对于类似于研究<strong>事件之间事件间隔</strong>的需求。</p>
+<h4 id="设计过程-1"><a href="#设计过程-1" class="headerlink" title="设计过程"></a>设计过程</h4><ol>
+<li>选择业务过程</li>
+<li>确定粒度</li>
+<li>确定维度</li>
+<li>确定事实</li>
+<li>退化维度</li>
+</ol>
+<h5 id="业务过程-1"><a href="#业务过程-1" class="headerlink" title="业务过程"></a>业务过程</h5><p>存在横跨多个业务过程。</p>
+<h5 id="确定粒度"><a href="#确定粒度" class="headerlink" title="确定粒度"></a>确定粒度</h5><p>一个完整的流程，累计快照事实表用于考察实体的唯一实例，所以只记录一行。</p>
+<h5 id="确定维度"><a href="#确定维度" class="headerlink" title="确定维度"></a>确定维度</h5><p>与事务事实表相同。多个维度进行描述。</p>
+<h5 id="确定事实-1"><a href="#确定事实-1" class="headerlink" title="确定事实"></a>确定事实</h5><p>需要将各业务过程对应的事实均放入事实表中。累计事实表解决掉的最重要的问题是统计不同业务过程之间的时间间隔，建议将<strong>每个过程的时间间隔作为事实放在事实表中</strong>。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybply1gbv3qkkce0j30g20j444c.jpg" alt="image-20200213205743471"></p>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><h5 id="数据不断更新"><a href="#数据不断更新" class="headerlink" title="数据不断更新"></a>数据不断更新</h5><p>事务事实表记录事务发生时的状态，对于实体的某一实例不再更新，而累积快照事实表则对实体的某一实例定期更新。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybply1gbv3qmmp8xj30g60giwkp.jpg" alt="image-20200213210012559"></p>
+<h5 id="多业务过程日期"><a href="#多业务过程日期" class="headerlink" title="多业务过程日期"></a>多业务过程日期</h5><p>累积快照事实表适用于具有较明确起始时间的段生命周期的实体，比如交易订单、物流订单等。</p>
+<h3 id="聚集型事实表"><a href="#聚集型事实表" class="headerlink" title="聚集型事实表"></a>聚集型事实表</h3><p>又名为汇总表。聚集主要是通过汇总明细粒度数据来获得改进查询性能的效果。</p>
+<h4 id="基本原则"><a href="#基本原则" class="headerlink" title="基本原则"></a>基本原则</h4><p>一致性。聚集表必须提供与查询明细粒度数据一致的查询结果。最简单方法是确保聚集星型模型中的维度和度量与原始模型中的维度和度量保持一致。</p>
+<p>避免单一表设计。不要在同一个表中存储不同层次的聚集数据。</p>
+<p>聚集粒度可不同。聚集并不需要保持与原始米线粒度数据一样的粒度，聚集只关心锁需要查询的维度。</p>
+<h4 id="基本步骤"><a href="#基本步骤" class="headerlink" title="基本步骤"></a>基本步骤</h4><ol>
+<li>确定聚集维度</li>
+<li>确定一致性上钻</li>
+<li>确定聚集事实</li>
+</ol>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybply1gbv3qvxzktj30ha0nzgn8.jpg" alt="image-20200213213005496"></p>
+<p><img src="https://tva1.sinaimg.cn/large/0082zybply1gbv3r2xoagj30ft097n06.jpg" alt="image-20200213213017054"></p>
+<h4 id="聚集补充说明"><a href="#聚集补充说明" class="headerlink" title="聚集补充说明"></a>聚集补充说明</h4><p>聚集不能跨越事实的，聚集的维度和度量必须与原始模型保持一致。</p>
+<p>聚集会带来查询性能的提升，但聚集也会增加 ETL 维护的难度。当子类目对应的以及类目发生变更是，先前存在的、已经被汇总到聚集表中的数据需要被重新调整。</p>
+<h2 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h2><p><strong>Q：是否所有的业务流程都需要进行统计？</strong></p>
+<p>A: 不是，对于有些业务流程特别长的，需要考虑进行精简，对关键节点进行统计就行了。</p>
+<p><strong>Q: 汇总表与快照事实表的区别是什么？</strong></p>
+<p>A: 汇总表是基于事实表数据进行汇总，是纵向的，是基于已有的数据进行类似于 SUM 操作。而快照事实表更多是横向的，跨越多个事务事实表，进行横向的合并。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/weixin.jpg" alt="迹_Jason wechat" style="width: 200px; max-width: 100%;"/>
+    <div>分享快乐，感受科技的温度</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/pay.jpg" alt="迹_Jason 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/08/数据治理元数据/" rel="next" title="数据治理--元数据">
+                <i class="fa fa-chevron-left"></i> 数据治理--元数据
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/1.jpg"
+                alt="迹_Jason" />
+            
+              <p class="site-author-name" itemprop="name">迹_Jason</p>
+              <p class="site-description motion-element" itemprop="description">分享快乐，感受科技的温度</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">48</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zoeminghong" target="_blank" title="github" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>github</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/jasongoo123/home?wvr=5" target="_blank" title="weibo" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>weibo</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#date-2020-02-13"><span class="nav-number">1.</span> <span class="nav-text">date:2020-02-13</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#名词说明"><span class="nav-number">2.</span> <span class="nav-text">名词说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#业务板块"><span class="nav-number">2.1.</span> <span class="nav-text">业务板块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#公共定义"><span class="nav-number">2.2.</span> <span class="nav-text">公共定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#项目管理"><span class="nav-number">2.3.</span> <span class="nav-text">项目管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#维度"><span class="nav-number">2.4.</span> <span class="nav-text">维度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#业务过程"><span class="nav-number">2.5.</span> <span class="nav-text">业务过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指标"><span class="nav-number">2.6.</span> <span class="nav-text">指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#统计粒度"><span class="nav-number">2.7.</span> <span class="nav-text">统计粒度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事实"><span class="nav-number">2.8.</span> <span class="nav-text">事实</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#事实的设计准则"><span class="nav-number">2.8.1.</span> <span class="nav-text">事实的设计准则</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事实表"><span class="nav-number">3.</span> <span class="nav-text">事实表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#事实表设计原则"><span class="nav-number">3.1.</span> <span class="nav-text">事实表设计原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事实表设计方法"><span class="nav-number">3.2.</span> <span class="nav-text">事实表设计方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#声明粒度"><span class="nav-number">3.2.1.</span> <span class="nav-text">声明粒度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#确定事实"><span class="nav-number">3.2.2.</span> <span class="nav-text">确定事实</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#冗余维度"><span class="nav-number">3.2.3.</span> <span class="nav-text">冗余维度</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事务事实表"><span class="nav-number">3.3.</span> <span class="nav-text">事务事实表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设计过程"><span class="nav-number">3.3.1.</span> <span class="nav-text">设计过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#事务事实表分类"><span class="nav-number">3.3.2.</span> <span class="nav-text">事务事实表分类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#多事务事实表"><span class="nav-number">3.3.2.1.</span> <span class="nav-text">多事务事实表</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#两种事务事实表如何选择"><span class="nav-number">3.3.3.</span> <span class="nav-text">两种事务事实表如何选择</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#周期快照事实表"><span class="nav-number">3.4.</span> <span class="nav-text">周期快照事实表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特性"><span class="nav-number">3.4.1.</span> <span class="nav-text">特性</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#用快照采样状态"><span class="nav-number">3.4.1.1.</span> <span class="nav-text">用快照采样状态</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#快照粒度"><span class="nav-number">3.4.1.2.</span> <span class="nav-text">快照粒度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#密度与稀疏性"><span class="nav-number">3.4.1.3.</span> <span class="nav-text">密度与稀疏性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#半可加性"><span class="nav-number">3.4.1.4.</span> <span class="nav-text">半可加性</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#快照事实表分类"><span class="nav-number">3.4.2.</span> <span class="nav-text">快照事实表分类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#设计步骤"><span class="nav-number">3.4.2.1.</span> <span class="nav-text">设计步骤</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#单维度的每天快照事实表"><span class="nav-number">3.4.2.2.</span> <span class="nav-text">单维度的每天快照事实表</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#混合维度的每天快照事实表"><span class="nav-number">3.4.2.3.</span> <span class="nav-text">混合维度的每天快照事实表</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#全量快照事实表"><span class="nav-number">3.4.2.4.</span> <span class="nav-text">全量快照事实表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#累计快照事实表"><span class="nav-number">3.5.</span> <span class="nav-text">累计快照事实表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设计过程-1"><span class="nav-number">3.5.1.</span> <span class="nav-text">设计过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#业务过程-1"><span class="nav-number">3.5.1.1.</span> <span class="nav-text">业务过程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#确定粒度"><span class="nav-number">3.5.1.2.</span> <span class="nav-text">确定粒度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#确定维度"><span class="nav-number">3.5.1.3.</span> <span class="nav-text">确定维度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#确定事实-1"><span class="nav-number">3.5.1.4.</span> <span class="nav-text">确定事实</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特点"><span class="nav-number">3.5.2.</span> <span class="nav-text">特点</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#数据不断更新"><span class="nav-number">3.5.2.1.</span> <span class="nav-text">数据不断更新</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#多业务过程日期"><span class="nav-number">3.5.2.2.</span> <span class="nav-text">多业务过程日期</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#聚集型事实表"><span class="nav-number">3.6.</span> <span class="nav-text">聚集型事实表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本原则"><span class="nav-number">3.6.1.</span> <span class="nav-text">基本原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基本步骤"><span class="nav-number">3.6.2.</span> <span class="nav-text">基本步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#聚集补充说明"><span class="nav-number">3.6.3.</span> <span class="nav-text">聚集补充说明</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#讨论"><span class="nav-number">4.</span> <span class="nav-text">讨论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">迹_Jason</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" rel="external nofollow" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Mist</a> v6.0.6</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.6"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.6"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.6"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.6"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.6"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://zerostech.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://zoeminghong.github.io/2020/02/13/数据模型20200213/';
+        this.page.identifier = '2020/02/13/数据模型20200213/';
+        this.page.title = '';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://zerostech.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        $(function () {
+          var offsetTop = $('#comments').offset().top - $(window).height();
+          if (offsetTop <= 0) {
+            // load directly when there's no a scrollbar
+            loadComments();
+          } else {
+            $(window).on('scroll.disqus_scroll', function () {
+              var scrollTop = document.documentElement.scrollTop;
+              if (scrollTop >= offsetTop) {
+                $(window).off('.disqus_scroll');
+                loadComments();
+              }
+            });
+          }
+        });
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -377,19 +377,19 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[教你如何建高逼格个人网站]]></title>
-    <url>%2F2016%2F04%2F20%2Foctopress%2F</url>
-    <content type="text"><![CDATA[从大学开始我就希望能有一个自己的个人网站，觉得那样真的很酷，就自学了HTML和Java编程，从此踏上了码农搬砖的不归路。。。。现如今，建一个网站的成本真的是太低了，特别是有了GitHub以后，不懂代码的孩子都可以自己建站了。好，废话就放到最后说。 一、Git安装配置1、安装Git软件 2、在Github上注册一个帐号 地址：Github 3、在桌面打开Git，进行设置 12git config --global user.name "username"//github的帐号名git config --global user.email "username@163.com"//github的邮箱地址 4、生成ssh密钥 1ssh-keygen -t rsa -C "username@163.com"//github邮箱地址 接着会提醒你输入名字和密码，可以为空会在C盘的该电脑用户下面生成一个.ssh文件，其中的id_rsa和id_rsa.pub，id_rsa要好好保存，id_rsa.pub用来在github网站做配置用 5、配置github 使用Add SSH key，tittle可以随意输，将id_rsa.pub中的密钥保存到这里设置完成后，可以在本地输入 1ssh -T git@github.com 其会将github中的公钥与本地的私钥进行匹配，成功则会返回成功信息 二、安装Ruby1、在安装Ruby时一定要勾选Add RubyExcutables to your Path，否则自己要配置环境变量2、查看是否安装成功 1ruby -v 三、安装devkit四、将Ruby与devkit关联起来1、在devkit安装目录下 1ruby dk.rb init 会生成一个config.yml成功的情况下在该文件下面会有一行是关于ruby的安装路径的数据如果失败也没事，只要通过手动输入就行了 2、在devkit安装目录下 1ruby dk.rb install 五、安装配置octopress1、克隆octopress，切换到自己要安装的文件下 1git clone git://github.com/imathis/octopress.git octopress 2、在octopress的文件根目录下 1gen sources -a http://gems.ruby-china.org/ 一个国内的软件源移除自带的软件源，因为在国内会被墙 1gem sources -r http://rubygems.org 查看软件源 1gem sources -l 3、修改octopress文件下面的Gemfile文件中的source地址，也改为http://gems.ruby-china.org/如果上面的命令存在执行错误，可以使用windows自带的CMD命令行去执行 4、在octopress下 1gem install bundle 过程有点长，会有successful接着执行 1bundle install 过程有点长最后 1rake install 会生成source和public文件，source是源代码的文件，而public是生成的文件 5、编译octopress 在octopress文件下 1rake generator 该指令会编译修改的内容，生成好的文件会在public文件下 6、运行 在octopress文件下 1rake preview 会使用4000端口，开一个服务使用localhost:4000访问 六、部署到Github网站上去1、在Github中创建一个username.github.io的仓库，username为用户自己的Github帐号名 2、在octopress文件下 1rake setup_github_pages 会提示你输入github中的git地址 会创建_deploy文件，并且跟Github绑定好了如果上面的指令不起作用，可以使用下面的方式 1rake setup_github_pages[github中username.github.io仓库的ssh地址] 3、使用rake generator 4、使用rake deploy，将本地编译好的文件上传到Github中 七、将source目录代码上传到Github分支123git add .git commit -m 'your message'//注释git push origin source 相关软件下载地址：软件 学习网站：jekyll 以上です(Ending) ありがどう(Thank You)]]></content>
-      <tags>
-        <tag>code</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[超越sublime的Visual Studio Code]]></title>
     <url>%2F2016%2F04%2F20%2Ffist%2F</url>
     <content type="text"><![CDATA[在 Build 2015 大会上，微软除了发布了 新的 Windows 10 系统外，最大的惊喜莫过于宣布推出免费跨平台的 Visual Studio Code 编辑器了！经过一年的更新换代，现在迎来1.0正式版。 其功能非常强大，甚至可以说比Sublime还要强大。功能列表： 语法高亮 代码补全 括号自动匹配 代码对比 Diff(我的最爱) GIT 支持插件安装 自定义热键 代码片段 代码调试 资源管理 支持单屏同时显示多个页面（CTRL+C利器） 支持图片的浏览 而且支持中文（良心啊） 支持主题更换 代码Fomat 以上的功能，作为程序员的你肯定就会有冲动去下载一个试试了！ 如果你是Linux的用户，别担心，它支持三大系统。 Visual Studio Code在使用过后，完全觉得的就是一个IDE，真的它强大，而且软件是秒开的。 它值得你拥有！ 以上です(Ending) ありがどう(Thank You)]]></content>
       <tags>
         <tag>it</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[教你如何建高逼格个人网站]]></title>
+    <url>%2F2016%2F04%2F20%2Foctopress%2F</url>
+    <content type="text"><![CDATA[从大学开始我就希望能有一个自己的个人网站，觉得那样真的很酷，就自学了HTML和Java编程，从此踏上了码农搬砖的不归路。。。。现如今，建一个网站的成本真的是太低了，特别是有了GitHub以后，不懂代码的孩子都可以自己建站了。好，废话就放到最后说。 一、Git安装配置1、安装Git软件 2、在Github上注册一个帐号 地址：Github 3、在桌面打开Git，进行设置 12git config --global user.name "username"//github的帐号名git config --global user.email "username@163.com"//github的邮箱地址 4、生成ssh密钥 1ssh-keygen -t rsa -C "username@163.com"//github邮箱地址 接着会提醒你输入名字和密码，可以为空会在C盘的该电脑用户下面生成一个.ssh文件，其中的id_rsa和id_rsa.pub，id_rsa要好好保存，id_rsa.pub用来在github网站做配置用 5、配置github 使用Add SSH key，tittle可以随意输，将id_rsa.pub中的密钥保存到这里设置完成后，可以在本地输入 1ssh -T git@github.com 其会将github中的公钥与本地的私钥进行匹配，成功则会返回成功信息 二、安装Ruby1、在安装Ruby时一定要勾选Add RubyExcutables to your Path，否则自己要配置环境变量2、查看是否安装成功 1ruby -v 三、安装devkit四、将Ruby与devkit关联起来1、在devkit安装目录下 1ruby dk.rb init 会生成一个config.yml成功的情况下在该文件下面会有一行是关于ruby的安装路径的数据如果失败也没事，只要通过手动输入就行了 2、在devkit安装目录下 1ruby dk.rb install 五、安装配置octopress1、克隆octopress，切换到自己要安装的文件下 1git clone git://github.com/imathis/octopress.git octopress 2、在octopress的文件根目录下 1gen sources -a http://gems.ruby-china.org/ 一个国内的软件源移除自带的软件源，因为在国内会被墙 1gem sources -r http://rubygems.org 查看软件源 1gem sources -l 3、修改octopress文件下面的Gemfile文件中的source地址，也改为http://gems.ruby-china.org/如果上面的命令存在执行错误，可以使用windows自带的CMD命令行去执行 4、在octopress下 1gem install bundle 过程有点长，会有successful接着执行 1bundle install 过程有点长最后 1rake install 会生成source和public文件，source是源代码的文件，而public是生成的文件 5、编译octopress 在octopress文件下 1rake generator 该指令会编译修改的内容，生成好的文件会在public文件下 6、运行 在octopress文件下 1rake preview 会使用4000端口，开一个服务使用localhost:4000访问 六、部署到Github网站上去1、在Github中创建一个username.github.io的仓库，username为用户自己的Github帐号名 2、在octopress文件下 1rake setup_github_pages 会提示你输入github中的git地址 会创建_deploy文件，并且跟Github绑定好了如果上面的指令不起作用，可以使用下面的方式 1rake setup_github_pages[github中username.github.io仓库的ssh地址] 3、使用rake generator 4、使用rake deploy，将本地编译好的文件上传到Github中 七、将source目录代码上传到Github分支123git add .git commit -m 'your message'//注释git push origin source 相关软件下载地址：软件 学习网站：jekyll 以上です(Ending) ありがどう(Thank You)]]></content>
+      <tags>
+        <tag>code</tag>
       </tags>
   </entry>
 </search>

@@ -99,23 +99,25 @@
 
 
 
-  <meta name="description" content="分享快乐，感受科技的温度">
-<meta property="og:type" content="website">
-<meta property="og:title" content="AppZone">
-<meta property="og:url" content="http://zoeminghong.github.io/archives/2018/07/index.html">
+  <meta name="description" content="应用开发中，为了提升查询性能或者做服务降级方案时，我们会使用缓存作为解决方案，像分布式缓存方案，比如 Redis、Memcache等；本地缓存方案，比如 Guava、Caffeine等。如果仅仅对当前服务的执行结果的缓存，用于下次相同查询时加快查询效率来说，还相对简单一点。只需要将查询条件作为key，返回的结果作为 value 即可实现，复杂一点会加上缓存失效机制等。">
+<meta name="keywords" content="code">
+<meta property="og:type" content="article">
+<meta property="og:title" content="优秀的数据同步方案如何设计">
+<meta property="og:url" content="http://zoeminghong.github.io/2019/06/10/如何做好数据同步/index.html">
 <meta property="og:site_name" content="AppZone">
-<meta property="og:description" content="分享快乐，感受科技的温度">
+<meta property="og:description" content="应用开发中，为了提升查询性能或者做服务降级方案时，我们会使用缓存作为解决方案，像分布式缓存方案，比如 Redis、Memcache等；本地缓存方案，比如 Guava、Caffeine等。如果仅仅对当前服务的执行结果的缓存，用于下次相同查询时加快查询效率来说，还相对简单一点。只需要将查询条件作为key，返回的结果作为 value 即可实现，复杂一点会加上缓存失效机制等。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-06-11T06:56:36.751Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AppZone">
-<meta name="twitter:description" content="分享快乐，感受科技的温度">
+<meta name="twitter:title" content="优秀的数据同步方案如何设计">
+<meta name="twitter:description" content="应用开发中，为了提升查询性能或者做服务降级方案时，我们会使用缓存作为解决方案，像分布式缓存方案，比如 Redis、Memcache等；本地缓存方案，比如 Guava、Caffeine等。如果仅仅对当前服务的执行结果的缓存，用于下次相同查询时加快查询效率来说，还相对简单一点。只需要将查询条件作为key，返回的结果作为 value 即可实现，复杂一点会加上缓存失效机制等。">
 
 
 
 
 
 
-  <link rel="canonical" href="http://zoeminghong.github.io/archives/2018/07/"/>
+  <link rel="canonical" href="http://zoeminghong.github.io/2019/06/10/如何做好数据同步/"/>
 
 
 
@@ -125,7 +127,7 @@
   };
 </script>
 
-  <title>归档 | AppZone</title>
+  <title>优秀的数据同步方案如何设计 | AppZone</title>
   
 
 
@@ -172,7 +174,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -315,116 +317,240 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        OK! 目前共计 49 篇日志。 继续努力。
-      </span>
-      
+  
 
-      
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zoeminghong.github.io/2019/06/10/如何做好数据同步/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="迹_Jason">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZone">
+    </span>
+
+    
+      <header class="post-header">
 
         
         
+          <h2 class="post-title" itemprop="name headline">优秀的数据同步方案如何设计</h2>
         
 
-        
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-10T00:00:00+08:00">2019-06-10</time>
+            
+
+            
+            
+
+            
+          </span>
+
           
-          <div class="collection-title">
-            <h2 class="archive-year" id="archive-year-2018">2018</h2>
-          </div>
-        
-        
 
-        
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/06/10/如何做好数据同步/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2019/06/10/如何做好数据同步/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/07/20/Kafka ConsumerOffset20180720/" itemprop="url">
-              
-                <span itemprop="name">Kafka Consumer重置Offset</span>
-              
-            </a>
-        
-      </h3>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-20T00:00:00+08:00"
-              content="2018-07-20" >
-          07-20
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/07/05/asciidoctor20180705/" itemprop="url">
-              
-                <span itemprop="name">Asciidoctor Maven插件使用</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-05T00:00:00+08:00"
-              content="2018-07-05" >
-          07-05
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
+      
+        <p>应用开发中，为了提升查询性能或者做服务降级方案时，我们会使用缓存作为解决方案，像分布式缓存方案，比如 Redis、Memcache等；本地缓存方案，比如 Guava、Caffeine等。如果仅仅对当前服务的执行结果的缓存，用于下次相同查询时加快查询效率来说，还相对简单一点。只需要将查询条件作为key，返回的结果作为 value 即可实现，复杂一点会加上缓存失效机制等。</p>
+<a id="more"></a>
+<p>但还有一种可能缓存，可能是需要进行数据的同步的操作的。比如笔者之前做过的用户权限中心，由于对响应实时性方面有很大的要求，虽然使用了异步非阻塞编程方式以提高性能，但如果涉及到数据库的操作，其实性能并不能达到目标值。由于权限的相关配置项通过字节估算，对资源消耗并不算大，因而，笔者考虑使用本地缓存方案实现。</p>
+<h2 id="同步方案"><a href="#同步方案" class="headerlink" title="同步方案"></a>同步方案</h2><p>做数据同步需要考虑同步方案和数据格式。同步方案常见有主动同步（启动初始化、定时任务）和被动同步（消息通知、回调）两种模式。应用一般会在启动的时候初始化一份基准数据，之后的数据更新都基于这份基准数据进行修改。对数据实时性要求不高的场景，可以通过定时任务方式主动拉取数据，在这种方式中存在全量和增量两种模式。全量是最简单的方案，只需要对原先的缓存进行清空操作，填充最新的数据即可，适合数据量比较小的场景。增量方式相对来说比较复杂，需要依照不同的更新维度做相应的修改。还是拿权限例子来说，一般存在Tenant、AppId、 User、Role、Group、Resource等内容，这里存在层级关系，<code>{User、Role、Group、Resource}</code> 存在于 AppId 下，AppId 又同时存在于 Tenant 中，其中广义上来说 API、Tag、Menu 都是属于 Resource范畴，具体设计这里不进行展开，那么缓存格式可以是这样的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Tenant -&gt; Appid -&gt; Method -&gt; Path -&gt; UserId -&gt; RoleId</span><br></pre></td></tr></table></figure>
+<p>在用户登录的时候，会携带 tenant、appid、user、role 等信息，同时，当前请求的 Method 和 Path 也是可以知晓的。假设用户在配置请求路径 Path 的时候配置错误了，现在需要在后台进行修改，修改之后就会进行数据的同步，我们先不关心用哪种方式触发同步，我们去修改缓存的时候，需要从左到右一层层进行判断，进行修改，这样还不是最麻烦的，麻烦的是上面的每一层级都是一个可以变化的单元，都可能存在新增、修改和删除的情况，是不是想想就会觉得头大了呢。那么有哪些解决方案可以供参考：</p>
+<ul>
+<li>全量同步，简单粗暴且高效，但不适合数据量大且获取更新数据比较复杂麻烦的场景</li>
+<li>拆分多个缓存，例如 <code>Tenant -&gt; Appid -&gt; Method -&gt; Path -&gt; RoleId</code>，<code>Tenant -&gt; Appid -&gt; Method -&gt; Path -&gt; UserId</code>（这里只是举例说明，实际并非如此）</li>
+<li>简化操作，一般缓存都是存在增删改的操作，这三者中改操作往往是最复杂的一种，如果只有增删会简单很多</li>
+</ul>
+<p>再回过来讲一下消息通知的同步方式，消息通知存在 RabbitMQ、RocketMQ、Kafka 等消息中间件解决方案。在一致性方面要求高的场景，可以使用 RabbitMQ 和 RocketMQ，能确保数据量比较大的场景推荐使用 Kafka 方案，毕竟 Kafka 是为大数据而生的。使用消息通知的方式就需要引用消息中间，相对 API 方式来说比较笨重且引入了一个不稳定因素，对于小项目来说得不偿失，同时，如果是公司外部应用，不会提供消息中间件作为数据同步方案。</p>
+<p>接着说说回调，这种方式被广泛用于对外业务中，HTTP 或者 HTTPS 方式比较轻量级、接受度高，当然回调这种概念不局限于通讯协议方式，RPC 方式也是可以的。回调方式与消息通知方式进行对比的话，回调需要自行实现幂等和重试机制，在编码方面需要投入更多，这也是大家为什么异步的场景青睐消息队列的原因。</p>
+<h2 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h2><p>数据格式需要结合同步方案和业务要求。如果是增量的方式，需要考虑修改前与修改之后，比如这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;id&quot;:&quot;UUID&quot;,</span><br><span class="line">        &quot;op&quot;:&quot;U&quot;, // 操作，U、D</span><br><span class="line">        &quot;t&quot;:1590730661263, // 时间戳</span><br><span class="line">        &quot;prev&quot;:&#123;</span><br><span class="line">            &quot;id&quot;:&quot;XXX&quot;, // 更新前ID</span><br><span class="line">            &quot;name&quot;:&quot;zhansan&quot;, // 更新前名称</span><br><span class="line">            &quot;time&quot;:&quot;1590730661124&quot; // 更新前更新时间</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;cur&quot;:&#123;</span><br><span class="line">            &quot;id&quot;:&quot;XXX&quot;, // 更新后ID</span><br><span class="line">            &quot;name&quot;:&quot;lisi&quot;, // 更新后名称</span><br><span class="line">             &quot;time&quot;:&quot;1590730661263&quot; // 更新后时间</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">     ......</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>全量方式则不需要这么复杂，只要最新结果集即可。同步方案的不同也会存在字段的考量，一般会从幂等性、数据一致性、服务稳定性、可用性、实时性等方面出发。一般我建议：</p>
+<ul>
+<li>字段尽可能短</li>
+<li>必须有id和时间戳信息</li>
+<li>Type 类型字段值，尽可能使用 Int 类型或者短字符串映射，例如上面的op字段使用短字符串方式</li>
+</ul>
+<h2 id="一些建议"><a href="#一些建议" class="headerlink" title="一些建议"></a>一些建议</h2><p><strong>正向不行，可以试试反向。</strong>在设计缓存结构时候，由于人的大脑擅长正向思维，可能设计的结果并不特别的理想（在查询和更新性能方面），这个时候可以考虑反向试试，可能会豁然开朗。<code>Tenant -&gt; Appid -&gt; Method -&gt; Path -&gt; UserId</code> 数据格式，在某些场景不如 <code>UserId -&gt; Method -&gt; Path -&gt;  Appid -&gt; Tenant</code> 。</p>
+<p><strong>稳定节点在前，多变的在后。数据量少在前，数据量多在后。</strong> 上面的例子中，Tenant 相对比较稳定，变更的比较少且数据量相对于 UserId 肯定比较少。这样在修改或者查找的时候，性能相对好。</p>
+<p><strong>空间与时间互换。</strong> 这个想必大家经常听到，时间换空间或者空间换时间。对于性能有要求的业务场景，通过冗余缓存方案可以提高查询性能；在资源紧张的场景但对时间有包容性，那适当在实时性方面进行取舍。</p>
+<p><strong>不要忽视数据提供方的性能问题。</strong> 实时性不仅仅依赖于需要数据的那方或者中间件，数据提供方也是可能存在性能瓶颈的。如果数据的数据格式要求特别变态，需要数据提供方联表查询 3 张表以上，性能可想而知，所以同步的数据要进行取舍，从而节省网络带宽和IO，提升性能。</p>
+
+      
     </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/weixin.jpg" alt="迹_Jason wechat" style="width: 200px; max-width: 100%;"/>
+    <div>分享快乐，感受科技的温度</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/pay.jpg" alt="迹_Jason 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/code/" rel="tag"># code</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/19/hbase_thrift/" rel="next" title="HBase Thrift with Python">
+                <i class="fa fa-chevron-left"></i> HBase Thrift with Python
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/24/谈谈 Spark 应用日志级别的坑/" rel="prev" title="谈谈 Spark 应用日志级别的坑">
+                谈谈 Spark 应用日志级别的坑 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -445,8 +571,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -528,6 +663,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#同步方案"><span class="nav-number">1.</span> <span class="nav-text">同步方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据格式"><span class="nav-number">2.</span> <span class="nav-text">数据格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些建议"><span class="nav-number">3.</span> <span class="nav-text">一些建议</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -657,6 +808,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.6"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.6"></script>
+
+
 
   
 
@@ -671,6 +826,37 @@
     <script id="dsq-count-scr" src="https://zerostech.disqus.com/count.js" async></script>
   
 
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://zoeminghong.github.io/2019/06/10/如何做好数据同步/';
+        this.page.identifier = '2019/06/10/如何做好数据同步/';
+        this.page.title = '优秀的数据同步方案如何设计';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://zerostech.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        $(function () {
+          var offsetTop = $('#comments').offset().top - $(window).height();
+          if (offsetTop <= 0) {
+            // load directly when there's no a scrollbar
+            loadComments();
+          } else {
+            $(window).on('scroll.disqus_scroll', function () {
+              var scrollTop = document.documentElement.scrollTop;
+              if (scrollTop >= offsetTop) {
+                $(window).off('.disqus_scroll');
+                loadComments();
+              }
+            });
+          }
+        });
+      
+    </script>
   
 
 

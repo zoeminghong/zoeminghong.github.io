@@ -1,4 +1,5 @@
 #!/bin/sh
+nvm use v9.8.0
 hexo generate
 if [ $? -eq 0 ]
 then
